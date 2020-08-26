@@ -1,0 +1,5 @@
+log
+temp
+*.log
+.hbmk
+*.exe
