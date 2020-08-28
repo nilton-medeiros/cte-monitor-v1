@@ -3,5 +3,12 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"harbour.compilerExecutable": "D:\\hmg.3.4.4\\HARBOUR\\bin\\harbour.exe",
+		"harbour.extraIncludePaths": [
+			"D:\\hmg.3.4.4\\INCLUDE",
+			"D:\\hmg.3.4.4\\HARBOUR\\include"
+		]
+	}
 }
