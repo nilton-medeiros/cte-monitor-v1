@@ -898,7 +898,7 @@ procedure infGlobalizado(infCte)
    with object infCte
       if (:ide:tpCTe:value == '0') .and. (:ide:tpServ:value == '0') .and. (Len(:infCTeNorm:infDoc:infNFe:value) > 4)
          for each nfe in :infCTeNorm:infDoc:infNFe:value
-            cnpj := hb_USubStr(nfe:chave, 7, 14)
+            cnpj := SubStr(nfe:chave, 7, 14)
             if (cnpj == :rem:CNPJ:value) .and. (hb_AScan(reme, cnpj,,, True) == 0)
                AAdd(reme, cnpj)
             elseif (cnpj == :dest:CNPJ:value) .and. (hb_AScan(dest, cnpj,,, True) == 0)
