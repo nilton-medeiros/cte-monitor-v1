@@ -905,11 +905,11 @@ procedure infGlobalizado(infCte)
                AAdd(dest, cnpj)
             endif
          next
-         if (:ide:toma3:toma:value == '3')
-            // Tomador: Destinatário, o número de CNPJ diferentes nas chaves são maior ou igual a 5
+         if (:ide:toma3:toma:value == '3') .and. (Len(reme) > 4)
+            // Tomador: Destinatário, o número de CNPJ diferentes nas chaves emitidas pelos Remetentes são maior ou igual a 5
             :ide:indGlobalizado:value := '1'
-         elseif (:ide:toma3:toma:value == '0') .and. (Len(reme) == 1) .and. (Len(dest) == 0)
-            // Tomador: Remetente, todas as NFes são do mesmo emitente
+         elseif (:ide:toma3:toma:value == '0') .and. (Len(reme) == 1) .and. (:dest:xNome:value == 'DIVERSOS') .and. (:dest:CNPJ:raw == :emit:CNPJ:raw)
+            // Tomador: Remetente, tem mais de 4 NFes, todas as NFes são do mesmo emitente (remetente) e tem vários destinatários
             :ide:indGlobalizado:value := '1'
          else
             :ide:indGlobalizado:value := ''
