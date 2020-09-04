@@ -68,6 +68,16 @@ function cte_createObject(rowCTe, qObs, qCc, qDoc)
       // dest | Informações do destinatário do CT-e
       dest(cte:infCte:dest, rowCTe)
 
+      // receb | Informações do recebedor do CT-e se houver
+      if !empty(rowCTe:getField('rec_cnpj')) .or. !empty(rowCTe:getField('rec_cpf'))
+         receb(cte:infCte:receb, rowCTe)
+      endif
+
+      // exped | Informações do expedidor do CT-e
+      if !empty(rowCTe:getField('exp_cnpj')) .or. !empty(rowCTe:getField('exp_cpf'))
+         exped(cte:infCte:exped, rowCTe)
+      endif
+
    else
       /* Serviço igual a 3 - Redespacho Intermediário; 4 - Serviço Vinculado a Multimodal
          * Informar o expedidor e o recebedor
@@ -449,15 +459,19 @@ procedure exped(exped, rowCTe)
 return
 
 procedure receb(receb, rowCTe)
+   local var_log := 'Incluindo Recebedor: '
    with object receb
       :submit := True
       if !empty(rowCTe:getField('rec_cnpj'))
          :CNPJ:value := rowCTe:getField('rec_cnpj')
          :IE:value := rowCTe:getField('rec_ie')
+         var_log += 'CNPJ: ' + :CNPJ:value + '| '
       elseif !empty(rowCTe:getField('rec_cpf'))
          :CPF:value := rowCTe:getField('rec_cpf')
+         var_log += 'CPF: ' + :CPF:value + '| '
       endif
       :xNome:value := rowCTe:getField('rec_razao_social')
+      var_log += 'Nome: ' + :xNome:value
       //:xFant:value := rowCTe:getField('rec_nome_fantasia')
       :fone:value := rowCTe:getField('rec_fone')
       :fone:raw := onlyNumbers(:fone:value)
@@ -472,6 +486,7 @@ procedure receb(receb, rowCTe)
       :email:value := getEmailClient(rowCTe:getField('clie_recebedor_id'))
       :contribuinte_ICMS := rowCTe:getField('rec_icms')
    endwith
+   saveLog(var_log)
 return
 
 procedure vPrest(vPrest, rowCTe, qCc)
