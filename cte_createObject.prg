@@ -417,7 +417,7 @@ procedure dest(dest, rowCTe)
       endif
       :xNome:value := rowCTe:getField('des_razao_social')
       //:xFant:value := rowCTe:getField('des_nome_fantasia')
-      :fone:value := rowCTe:getField('des_fone')
+      :fone:value := onlyNumbers(rowCTe:getField('des_fone'))
       :fone:raw := onlyNumbers(:fone:value)
       :endereco:xLgr:value := rowCTe:getField('des_end_logradouro')
       :endereco:nro:value := rowCTe:getField('des_end_numero')

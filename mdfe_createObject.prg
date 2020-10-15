@@ -64,11 +64,14 @@ function mdfe_createObject(mdfe_record)
    // seg | Informações de Seguro da Carga
    segMDFe(mdfe:infMDFe, emitente, mdfe_record:getField('id'))
 
+   // prodPred | Grupo de informações do Produto predominante da carga do MDF-e
+   prodPred(mdfe:infMDFe:prodPred, mdfe_record:getField('id'), mdfe:infMDFe:emit:enderEmit:CEP:value)
+
    // tot | Totalizadores da carga transportada e seus documentos fiscais
    totMDFe(mdfe:infMDFe:tot, mdfe_record)
 
    // autXML | Autorizados para download do XML do DF-e
-   autXML_MDFe(mdfe:infMDFe, mdfe_record:getField('id'))
+   autXML_MDFe(mdfe:infMDFe)
 
    // infAdic | Informações Adicionais
    with object mdfe:infMDFe:infAdic
@@ -110,7 +113,7 @@ procedure mdfeKey_firstFields(mdfe, emitente, mdfe_record)
       :cMDF:raw := mdfe_record:getField('id')
       :cMDF:value := mdfe_record:zeroFill('id', 8)
       :tpEmis:value := mdfe_record:getField('tpEmis')
-      :tpEmis:raw := mdfe_record:getField('tpEmis_rotulo')
+      :tpEmis:raw := onlyNumbers(:tpEmis:value)
    end
 return
 
@@ -177,7 +180,8 @@ procedure emitMDFe(emit, emitente)
       :enderEmit:xMun:value := emitente:getField('xMunEnv')
       :enderEmit:CEP:value := emitente:getField('CEP')
       :enderEmit:UF:value := emitente:getField('UF')
-      :fone:value := emitente:getField('fone')
+      :fone:value := onlyNumbers(emitente:getField('fone'))
+      :fone:raw := onlyNumbers(:fone:value)
       :email:value := emitente:getField('email')
    endwith
 return
@@ -446,6 +450,29 @@ procedure segMDFe(infMDFe, emitente, mdfe_id)
    endwith
 return
 
+procedure prodPred(prodPred, mdfe_id, emitCEP)
+   local q, s := TSQLString():new("SELECT pr.prod_produto AS xProd, ")
+
+   s:add("cl.clie_cep AS destCEP ")
+   s:add("FROM mdfes_ctes AS md ")
+   s:add("INNER JOIN ctes AS ct ON ct.cte_id = md.ctes_id ")
+   s:add("INNER JOIN produtos AS pr ON pr.prod_id = ct.prod_id ")
+   s:add("INNER JOIN clientes AS cl ON cl.clie_id = ct.clie_destinatario_id ")
+   s:add("WHERE md.mdfe_id = " + mdfe_id + " LIMIT 1")
+
+   q := TSQLQuery():new(s:value)
+   if q:isExecuted()
+      with object prodPred
+         :tpCarga:value := '05'
+         :xProd:value := q:getField('xProd')
+         :cEAN:value := 'SEM GTIN'
+         :NCM:value := '00000000'
+         :infLocalCarrega:value := emitCEP
+         :infLocalDescarrega:value := q:getField('destCEP')
+      endwith
+   endif
+return
+
 procedure totMDFe(tot, record)
    with object tot
       :qCTe:value := record:getField('qCTe')
@@ -455,7 +482,7 @@ procedure totMDFe(tot, record)
    endwith
 return
 
-procedure autXML_MDFe(infMDFe, mdfe_id)
+procedure autXML_MDFe(infMDFe)
    local infMunDescarga, chCTe, y := 0
    local doc, cnpj_cpf := {}
    local q, s := TSQLString():new("SELECT emp_cnpj, ")
