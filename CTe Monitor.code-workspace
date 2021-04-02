@@ -5,10 +5,10 @@
 		}
 	],
 	"settings": {
-		"harbour.compilerExecutable": "D:\\hmg.3.4.4\\HARBOUR\\bin\\harbour.exe",
+		"harbour.compilerExecutable": "C:\\hmg.3.4.4\\HARBOUR\\bin\\harbour.exe",
 		"harbour.extraIncludePaths": [
-			"D:\\hmg.3.4.4\\INCLUDE",
-			"D:\\hmg.3.4.4\\HARBOUR\\include"
+			"C:\\hmg.3.4.4\\INCLUDE",
+			"C:\\hmg.3.4.4\\HARBOUR\\include"
 		]
 	}
 }
