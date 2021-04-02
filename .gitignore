@@ -5,3 +5,5 @@ tmp
 .hbmk
 *.exe
 *.htm
+.env
+env.json

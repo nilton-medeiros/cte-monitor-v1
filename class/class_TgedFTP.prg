@@ -41,10 +41,10 @@ class TgedFTP
    data remotePath init '' PROTECTED
    data remoteFile init '' PROTECTED
    data urlFile init '' PROTECTED
-   data ftp_url init 'ftp://sistrom4:Sistrom4#FTP2020@ftp.sistrom.com.br' PROTECTED
-   data ftp_server init 'ftp.sistrom.com.br' PROTECTED
-   data ftp_userId init 'sistrom4' PROTECTED
-   data ftp_password init 'Sistrom4#FTP2020' PROTECTED
+   data ftp_url init .env.FTP_URL PROTECTED
+   data ftp_server init .env.FTP_SERVER PROTECTED
+   data ftp_userId init .env.FTP_USER_ID PROTECTED
+   data ftp_password init .env.FTP_PASSWORD PROTECTED
    data isUpload init False READONLY
    data deletedStatus init False PROTECTED
 
@@ -60,7 +60,7 @@ method new(host_file, remote_path, remote_file) class TgedFTP
    ::hostFile := host_file
    ::remotePath := remote_path
    ::remoteFile := remote_file
-   ::urlFile := 'https://www.sistrom.com.br/' + ::remotePath + "/" + ::remoteFile
+   ::urlFile := .env.URL_FILE + ::remotePath + '/' + ::remoteFile
 return self
 
 method upload() class TgedFTP
