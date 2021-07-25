@@ -33,6 +33,29 @@
 
 #include <hmg.ch>
 #include "hbclass.ch"
+
+/*
+   Usar arquivos json ou ini na pré compilação não funcionam como em Python para
+   carregar as variáveis do arrquivo ".env.json" ou ".env". para variáveis CONSTANTES
+   pois qualquer função só rodam em tempo de execução
+   
+   ---------------------------------------------------------------------------------> .env.json
+   {
+      "ftp_url": "ftp://seu-domímio.com.br",
+      "ftp_server": "ftp.servidor",
+      "ftp_user_id": "ftp.usuário.id",
+      "ftp_password": "ftp.senha",
+      "ftp_url_file": "ftp.url.arquivo"
+   }
+   ---------------------------------------------------------------------------------> .env.json
+*/
+
+#define ENV_FTP_URL "seu.ftp.url"
+#define ENV_FTP_SERVER "seu.servidor.ftp"
+#define ENV_FTP_USER_ID "seu.ftp.usuario"
+#define ENV_FTP_PASSWORD "seu.ftp.senha"
+#define ENV_URL_FILES "sua.url.de.arquivos"
+
 // GED - Gerenciador Eletrônico de Documentos - via FTP
 
 
@@ -41,10 +64,10 @@ class TgedFTP
    data remotePath init '' PROTECTED
    data remoteFile init '' PROTECTED
    data urlFile init '' PROTECTED
-   data ftp_url init .env.FTP_URL PROTECTED
-   data ftp_server init .env.FTP_SERVER PROTECTED
-   data ftp_userId init .env.FTP_USER_ID PROTECTED
-   data ftp_password init .env.FTP_PASSWORD PROTECTED
+   data ftp_url init ENV_FTP_URL PROTECTED
+   data ftp_server init ENV_FTP_SERVER PROTECTED
+   data ftp_userId init ENV_FTP_USER_ID PROTECTED
+   data ftp_password init ENV_FTP_PASSWORD PROTECTED
    data isUpload init False READONLY
    data deletedStatus init False PROTECTED
 
@@ -60,7 +83,7 @@ method new(host_file, remote_path, remote_file) class TgedFTP
    ::hostFile := host_file
    ::remotePath := remote_path
    ::remoteFile := remote_file
-   ::urlFile := .env.URL_FILE + ::remotePath + '/' + ::remoteFile
+   ::urlFile := ENV_URL_FILE + ::remotePath + '/' + ::remoteFile
 return self
 
 method upload() class TgedFTP

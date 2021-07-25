@@ -1,5 +1,5 @@
 1 VERSIONINFO
-  FILEVERSION 1,2,29
+  FILEVERSION 1,2,30
  {
     BLOCK "StringFileInfo"
     {
@@ -10,7 +10,7 @@
             VALUE "LegalCopyright"   , "Copyright (c) Sistrom Web"
             VALUE "OriginalFilename" , "CTeMonitor.exe"
             VALUE "ProductName"      , "CTe Monitor"
-            VALUE "ProductVersion"   , "1.2.29.Hb.MS"
+            VALUE "ProductVersion"   , "1.2.30.Hb.MS"
         }
     }
     BLOCK "VarFileInfo"
@@ -30,5 +30,4 @@ icoSetup PNG resources\setup17x.png
 about PNG resources\about17x.png
 close PNG resources\close17x.png
 icoDatabase PNG resources\database24x.png
-icoSave PNG resources\save30x.png
 spy PNG resources\spy16x.png
