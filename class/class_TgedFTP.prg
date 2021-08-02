@@ -50,11 +50,11 @@
    ---------------------------------------------------------------------------------> .env.json
 */
 
-#define ENV_FTP_URL "seu.ftp.url"
-#define ENV_FTP_SERVER "seu.servidor.ftp"
-#define ENV_FTP_USER_ID "seu.ftp.usuario"
-#define ENV_FTP_PASSWORD "seu.ftp.senha"
-#define ENV_URL_FILES "sua.url.de.arquivos"
+#define ENV_FTP_URL "ftp://seu-ftp-dominio-senha-aqui"
+#define ENV_FTP_SERVER "ftp.seu-dominio.com.br"
+#define ENV_FTP_USER_ID "seu-login"
+#define ENV_FTP_PASSWORD "sua-senha"
+#define ENV_URL_FILES "url-principal-dos-arquivos-pdf-xml"
 
 // GED - Gerenciador Eletrônico de Documentos - via FTP
 
@@ -83,7 +83,7 @@ method new(host_file, remote_path, remote_file) class TgedFTP
    ::hostFile := host_file
    ::remotePath := remote_path
    ::remoteFile := remote_file
-   ::urlFile := ENV_URL_FILE + ::remotePath + '/' + ::remoteFile
+   ::urlFile := ENV_URL_FILES + ::remotePath + '/' + ::remoteFile
 return self
 
 method upload() class TgedFTP

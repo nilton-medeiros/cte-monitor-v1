@@ -51,9 +51,12 @@ procedure cte_generateXML(cte)
              'tpAmb' => emitente:getField('tpAmb')}
 
       sefaz := TACBrMonitor():new(p)
-      if sefaz:Assinar() .and. sefaz:Validar()
-         if !sefaz:Enviar()
-            sefaz:StatusServico()
+
+      if sefaz:ObterCertificado()
+         if sefaz:Assinar() .and. sefaz:Validar()
+            if !sefaz:Enviar()
+               sefaz:StatusServico()
+            endif
          endif
       endif
       updateCTeStatus(sefaz)
@@ -73,6 +76,7 @@ procedure updateCTeStatus(sefaz)
    if (sefaz:situacao == 'TRANSMITIDO')
       sefaz:situacao := 'VALIDADO'
    endif
+   
    s:add("cte_situacao = '" + sefaz:situacao + "', ")
    s:add("cte_chave = '" + sefaz:chDFe + "', ")
 
