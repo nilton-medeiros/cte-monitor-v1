@@ -133,7 +133,7 @@ procedure ideMDFe(ide, record, emitente)
       // mdfe_id|cUF|mod|serie|nMDF|cMDF|tpEmis Gerado em mdfeKey_firstFields()
       :tpAmb:value := emitente:getField('tpAmb')
       :tpEmit:value := record:getField('tpEmit')
-      :tpTransp:value := '1' // 1 - ETC: Transporte Rodoviário de Cargas
+      :tpTransp:value := '' // 1 - ETC: Transporte Rodoviário de Cargas
       // :cDV: Gerado em generateKeyMDFe() ao validarMDFe()
       :modal:value := Right(emitente:getField('modal'), 1)
       :procEmi:value := record:getField('procEmi')

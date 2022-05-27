@@ -329,8 +329,8 @@ procedure compl(compl, rowCTe, ide, qObs)
       endif
       :origCalc:value := ide:xMunIni:value
       :destCalc:value := ide:xMunFim:value
-      :xObs:raw := hb_utf8StrTran(rowCTe:getField('xObs'), '\n', ';')
-      :xObs:value := rowCTe:getField('xObs')
+      :xObs:raw := hb_utf8StrTran(removeAccentuation(rowCTe:getField('xObs')), '\n', ';')
+      :xObs:value := removeAccentuation(rowCTe:getField('xObs'))
       if (ide:indGlobalizado:value == '1')
          :xObs:raw := :xObs:raw + ';Procedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017'
          :xObs:value := :xObs:value + '\nProcedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017'

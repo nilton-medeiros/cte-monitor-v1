@@ -8,3 +8,4 @@ tmp
 .env
 env.json
 .env.json
+.TGedFTP.env

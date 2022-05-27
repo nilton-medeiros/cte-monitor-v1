@@ -40,7 +40,7 @@ REQUEST HB_CODEPAGE_UTF8
 
 
 procedure main
-      public appData := TAppData():new("1.2.36")
+      public appData := TAppData():new("1.2.46")
       if HMG SUPPORT UNICODE RUN
       hb_langSelect('PT')
       hb_cdpSelect('UTF8')
