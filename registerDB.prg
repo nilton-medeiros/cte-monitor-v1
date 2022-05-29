@@ -34,21 +34,21 @@
 #include <hmg.ch>
 #include "hbclass.ch"
 
-
-procedure registerDB_form_onInit()
+// Atualizado: 2022-05-29 15:00
+procedure registerDB_onInit()
    local ip := TIPaddress():new()
-   if !Empty(RegistryRead(::registryPath + "Host\db_ServerName"))
-      ip:setIP(CharXor(RegistryRead(::registryPath + "Host\db_ServerName"), 'SisWeb2020'))
+   if !Empty(RegistryRead(appData:registryPath + "Host\db_ServerName"))
+      ip:setIP(CharXor(RegistryRead(appData:registryPath + "Host\db_ServerName"), 'SisWeb2020'))
       SetProperty('RegisterDB', 'IpAddress_host', 'Value', ip:arrayIP)
-      SetProperty('RegisterDB', 'Text_DataBase', 'Value', CharXor(RegistryRead(::registryPath + "Host\db_UserName"), 'SisWeb2020'))
-      SetProperty('RegisterDB', 'Text_User', 'Value', CharXor(RegistryRead(::registryPath + "Host\db_UserName"), 'SisWeb2020'))
-      SetProperty('RegisterDB', 'Text_Password', 'Value', CharXor(RegistryRead(::registryPath + "Host\db_Password"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_DataBase', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\db_UserName"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_User', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\db_UserName"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_Password', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\db_Password"), 'SisWeb2020'))
    endif
-   if !Empty(RegistryRead(::registryPath + "Host\ftp_url"))
-      SetProperty('RegisterDB', 'Text_ftp_url', 'Value', CharXor(RegistryRead(::registryPath + "Host\ftp_url"), 'SisWeb2020'))
-      SetProperty('RegisterDB', 'Text_ftp_server', 'Value', CharXor(RegistryRead(::registryPath + "Host\ftp_server"), 'SisWeb2020'))
-      SetProperty('RegisterDB', 'Text_ftp_id', 'Value', CharXor(RegistryRead(::registryPath + "Host\ftp_id"), 'SisWeb2020'))
-      SetProperty('RegisterDB', 'Text_ftp_password', 'Value', CharXor(RegistryRead(::registryPath + "Host\ftp_password"), 'SisWeb2020'))
+   if !Empty(RegistryRead(appData:registryPath + "Host\ftp_url"))
+      SetProperty('RegisterDB', 'Text_ftp_url', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\ftp_url"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_ftp_server', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\ftp_server"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_ftp_id', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\ftp_id"), 'SisWeb2020'))
+      SetProperty('RegisterDB', 'Text_ftp_password', 'Value', CharXor(RegistryRead(appData:registryPath + "Host\ftp_password"), 'SisWeb2020'))
    endif
 return
 
@@ -125,4 +125,5 @@ method convert(ip) class TIPaddress
          ::arrayIP[n] := Val(::arrayIP[n])
       next
    endif
+>>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
 return nil

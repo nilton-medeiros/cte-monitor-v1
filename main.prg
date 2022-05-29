@@ -38,9 +38,9 @@
 
 REQUEST HB_CODEPAGE_UTF8
 
-
+// Atualizado: 2022-05-29 15:00
 procedure main
-      public appData := TAppData():new("1.2.46")
+      public appData := TAppData():new("1.2.64")
       if HMG SUPPORT UNICODE RUN
       hb_langSelect('PT')
       hb_cdpSelect('UTF8')
@@ -147,3 +147,4 @@ procedure main_timerCTe_action()
    SetProperty('Main', 'TimerCTe', 'Enabled', True)
 
 return
+>>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1

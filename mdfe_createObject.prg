@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-
+// Atualizado: 2022-05-29 15:00
 function mdfe_createObject(mdfe_record)
    local mdfe := TMDFe():new(appData:ACBr, appData:UTC, appData:systemPath)
    local emitente := appData:getCompanies(mdfe_record:getField('emp_id'))
@@ -135,7 +135,8 @@ procedure ideMDFe(ide, record, emitente)
       :tpEmit:value := record:getField('tpEmit')
       :tpTransp:value := '' // 1 - ETC: Transporte Rodoviário de Cargas
       // :cDV: Gerado em generateKeyMDFe() ao validarMDFe()
-      :modal:value := Right(emitente:getField('modal'), 1)
+      /* ATENÇÃO - MDFe - modal size é 1 e sempre é rodoviário '01' */
+      :modal:value := '1' // Right(emitente:getField('modal'), 1) 
       :procEmi:value := record:getField('procEmi')
       :verProc:value := record:getField('verProc')
       :UFIni:value := record:getField('UFIni')
@@ -594,4 +595,5 @@ procedure autXML_MDFe(infMDFe)
       endif
    endif
 
+>>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
 return

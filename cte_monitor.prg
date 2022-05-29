@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-
+// Atualizado: 2022-05-29 15:00
 procedure monitorCTe()
       local sql := TSQLString():new()
       local queryCTe
@@ -176,6 +176,7 @@ procedure monitorCTe()
       sql:add("cte_info_fisco AS infAdFisco, ")
       sql:add("cte_valor_carga AS vCarga, ")
       sql:add("produto_predominante_nome AS proPred, ")
+      sql:add("gt_id_codigo AS cTar, ")
       sql:add("cte_outras_carac_carga AS xOutCat, ")
       sql:add("cte_peso_bruto, ")
       sql:add("cte_peso_cubado, ")
@@ -418,3 +419,4 @@ procedure inutilizeCTe(faixa)
    next
    msgNotify()
 return
+>>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1

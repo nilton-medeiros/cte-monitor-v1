@@ -1,6 +1,6 @@
 1 VERSIONINFO
-  FILEVERSION 1,2,46
- {
+  FILEVERSION 1,2,64
+{
     BLOCK "StringFileInfo"
     {
         BLOCK "040904E4"
@@ -10,7 +10,7 @@
             VALUE "LegalCopyright"   , "Copyright (c) Sistrom Web"
             VALUE "OriginalFilename" , "CTeMonitor.exe"
             VALUE "ProductName"      , "CTe Monitor"
-            VALUE "ProductVersion"   , "1.2.46.Hb.MS"
+            VALUE "ProductVersion"   , "1.2.64re.Hb.MS"
         }
     }
     BLOCK "VarFileInfo"
@@ -31,3 +31,4 @@ about PNG resources\about17x.png
 close PNG resources\close17x.png
 icoDatabase PNG resources\database24x.png
 spy PNG resources\spy16x.png
+>>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
