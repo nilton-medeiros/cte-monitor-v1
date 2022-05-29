@@ -174,17 +174,17 @@ procedure updateCTeStatus(sefaz)
    saveLog({'Atualizado TMS.CLOUD |CTe Id: ', sefaz:dfe_id, ' |Atualizado ', hb_ntos(i), ' Evento(s) com sucesso'})
 return
 
-procedure updateCTeErrors(c, eventStatus)
-   local i := 0, cId
+procedure updateCTeErrors(cte_sefaz, eventStatus)
+   local k := i := 0, cId, e
    local msg, q
    local s := TSQLString():new("UPDATE ctes SET ")
 
    default eventStatus := False
 
    if eventStatus
-      cId := c:dfe_id
+      cId := cte_sefaz:dfe_id
    else
-      cId := c:infCte:ide:cte_id
+      cId := cte_sefaz:infCte:ide:cte_id
       s:add("cte_situacao = 'REJEITADO', " )
    endif
    s:add("cte_monitor_action = 'EXECUTED' " )
@@ -207,8 +207,8 @@ procedure updateCTeErrors(c, eventStatus)
       s:add("'EVENTO REJEITADO - VERIFICAR COM O SUPORTE')") // cte_ev_detalhe e fechamento dos VALUES
       i := 1
    else
-      with object c:infCte:ide
-         for each msg in c:msgError
+      with object cte_sefaz:infCte:ide
+         for each msg in cte_sefaz:msgError
             i++
             msg := StrTran(msg, hb_eol(), '; ')
             s:add(iif((i==1), [(], [, (])) // Inicio dos VALUES
@@ -219,13 +219,38 @@ procedure updateCTeErrors(c, eventStatus)
             s:add("'" + string_hb_to_MySQL(msg) + "')") // cte_ev_detalhe e fechamento dos VALUES
          next
       endwith
+   endif
+   q := TSQLQuery():new(s:value)
+   if !q:isExecuted()
+      q:Destroy()
+      turnOFF()
+   endif
+   q:Destroy()
+
+   // eventStatus = true quando cancelCTe() e inutilizeCTe()
+   if eventStatus .and. !Empty(cte_sefaz:events)
+      
+      s:setValue("INSERT INTO ctes_eventos (cte_id, cte_ev_protocolo, cte_ev_data_hora, cte_ev_evento, cte_ev_detalhe) VALUES ")
+
+      for each e in cte_sefaz:events
+         // e = {'dhRecbto' => ::dhRecbto, 'nProt' => ::nRec, 'cStat' => ::cStat, 'xMotivo' => ::xMotivo + ' | Ambiente de ' + ::tpAmb}
+         k++
+         s:add(iif((k==1), [(], [, (])) // Inicio dos VALUES
+         s:add(cte_sefaz:dfe_id + ", ")
+         s:add("'" + string_hb_to_MySQL(e['nProt']) + "', ")
+         s:add(e['dhRecbto'] + ", ")
+         s:add("'" + string_hb_to_MySQL(e['cStat']) + "', ")
+         e['xMotivo'] := StrTran(e['xMotivo'], '; ;', ';')
+         s:add("'" + string_hb_to_MySQL(e['xMotivo']) + "')") // fechamento dos VALUES
+      next
       q := TSQLQuery():new(s:value)
       if !q:isExecuted()
          q:Destroy()
          turnOFF()
       endif
       q:Destroy()
-      saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(i), ' Evento(s) com sucesso'})
+   
    endif
+   saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k+i), ' Evento(s) com sucesso'})
 
 return

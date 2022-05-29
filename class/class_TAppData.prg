@@ -38,13 +38,12 @@
 class TAppData
 
    data MySQLDataSource
-   data companies init {} readonly
-   data UTC init '-03:00' readonly
-   data users init {} readonly
-   data registryRoot init "HKEY_CURRENT_USER\Software\Sistrom\" readonly
+   data companies readonly
+   data UTC readonly
+   data users readonly
+   data registryRoot readonly
    data registryPath readonly
-   data systemPath init hb_cwd() readonly
-   data dfePath
+   data systemPath readonly
    data executable readonly
    data executableName readonly
    data displayName readonly
@@ -56,6 +55,11 @@ class TAppData
    data frequency readonly
    data lastMessage init ''
    data ACBr
+   data ftp_url
+   data ftp_server
+   data ftp_id
+   data ftp_password
+   data dfePath
 
    method new(version) constructor
    method registerSystem()
@@ -76,11 +80,21 @@ end class
 method new(version) class TAppData
    DEFAULT version := "1.0.0"
    ::version := version
+   ::companies := {}
+   ::UTC := '-03:00'
+   ::users := {}
+   ::systemPath := hb_cwd()
+   ::registryRoot := "HKEY_CURRENT_USER\Software\Sistrom\"
    ::executable := hb_FNameNameExt(hb_ProgName())
    ::executableName := hb_FNameNameExt(hb_FNameName(hb_ProgName()))
    ::registryPath := ::registryRoot + ::executableName + "\"
    ::displayName := "CTeMonitor " + ::version + " (32-bit)"
    ::supportUrl := "https://www.sistrom.com.br/"
+   // Informações de ftp adicionada em registerDB pela primeira vez e depois lidas de RegistryRead
+   ::ftp_url := ''
+   ::ftp_server := ''
+   ::ftp_id := ''
+   ::ftp_password := ''
 return self
 
 method registerSystem() class TAppData
@@ -160,6 +174,8 @@ method registerSystem() class TAppData
 
    AEval(Directory('log\*.*'), {|aFile| iif(aFile[3] <= (Date()-70), hb_FileDelete("log\"+aFile[1]), NIL)})
    AEval(Directory('tmp\*.*'), {|aFile| iif(aFile[3] <= (Date()-10), hb_FileDelete("tmp\"+aFile[1]), NIL)})
+   AEval(Directory('ftp-*.log'), {|aFile| iif(aFile[3] <= (Date()-30), hb_FileDelete(aFile[1]), NIL)})
+
    if hb_DirExists(::ACBr:returnPath)
       AEval(Directory(::ACBr:returnPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-02), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
    endif
@@ -179,23 +195,27 @@ return isTrue(RegistryRead(::registryPath + "Monitoring\Running"))
 
 method registerDatabase() class TAppData
 
-   ::timer := seconds()
    ::startTime := RegistryRead(::registryPath + "Monitoring\startTime")
    ::endTime := RegistryRead(::registryPath + "Monitoring\endTime")
    ::frequency := RegistryRead(::registryPath + "Monitoring\frequency")
 
-   if Empty(RegistryRead(::registryPath + "Host\ServerName"))
+   if Empty(RegistryRead(::registryPath + "Host\ServerName")) .or. Empty(RegistryRead(::registryPath + "Host\ftp_url"))
       LOAD WINDOW registerDB
       ON KEY ESCAPE OF registerDB ACTION registerDB_Escape()
       registerDB.CENTER
       registerDB.ACTIVATE
    else
       ::MySQLDataSource := TMySQLDataSource():new({;
-                                             'address' => CharXor(RegistryRead(::registryPath + "Host\ServerName"), 'SisWeb2020'),;
-                                             'dataBase' => CharXor(RegistryRead(::registryPath + "Host\UserName"), 'SisWeb2020'),;
-                                             'userName' => CharXor(RegistryRead(::registryPath + "Host\UserName"), 'SisWeb2020'),;
-                                             'password' => CharXor(RegistryRead(::registryPath + "Host\Password"), 'SisWeb2020')})
+            'address' => CharXor(RegistryRead(::registryPath + "Host\ServerName"), 'SisWeb2020'),;
+            'dataBase' => CharXor(RegistryRead(::registryPath + "Host\UserName"), 'SisWeb2020'),;
+            'userName' => CharXor(RegistryRead(::registryPath + "Host\UserName"), 'SisWeb2020'),;
+            'password' => CharXor(RegistryRead(::registryPath + "Host\Password"), 'SisWeb2020')})
+      ::ftp_url := CharXor(RegistryRead(::registryPath + "Host\ftp_url"), 'SisWeb2020')
+      ::ftp_server := CharXor(RegistryRead(::registryPath + "Host\ftp_server"), 'SisWeb2020')
+      ::ftp_id := CharXor(RegistryRead(::registryPath + "Host\ftp_id"), 'SisWeb2020')
+      ::ftp_password := CharXor(RegistryRead(::registryPath + "Host\ftp_password"), 'SisWeb2020')
    endif
+   ::timer := seconds()
 
 return nil
 
@@ -203,6 +223,10 @@ method setDatabase() class TAppData
    RegistryWrite(::registryPath + "Host\ServerName", CharXor(::MySQLDataSource:address, 'SisWeb2020'))
    RegistryWrite(::registryPath + "Host\UserName", CharXor(::MySQLDataSource:userName, 'SisWeb2020'))
    RegistryWrite(::registryPath + "Host\Password", CharXor(::MySQLDataSource:password, 'SisWeb2020'))
+   RegistryWrite(::registryPath + "Host\ftp_url", CharXor(::ftp_url, 'SisWeb2020'))
+   RegistryWrite(::registryPath + "Host\ftp_server", CharXor(::ftp_server, 'SisWeb2020'))
+   RegistryWrite(::registryPath + "Host\ftp_id", CharXor(::ftp_id, 'SisWeb2020'))
+   RegistryWrite(::registryPath + "Host\ftp_password", CharXor(::ftp_password, 'SisWeb2020'))
 return nil
 
 method usersAdds(hash) class TAppData

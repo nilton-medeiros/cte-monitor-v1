@@ -30,44 +30,17 @@
    Caieiras - SP
 */
 
-
+// #require "hbtip"
 #include <hmg.ch>
 #include "hbclass.ch"
 
-/*
-   Usar arquivos json ou ini na pré compilação não funcionam como em Python para
-   carregar as variáveis do arrquivo ".env.json" ou ".env". para variáveis CONSTANTES
-   pois qualquer função só rodam em tempo de execução
-   
-   ---------------------------------------------------------------------------------> .env.json
-   {
-      "ftp_url": "ftp://seu-domímio.com.br",
-      "ftp_server": "ftp.servidor",
-      "ftp_user_id": "ftp.usuário.id",
-      "ftp_password": "ftp.senha",
-      "ftp_url_file": "ftp.url.arquivo"
-   }
-   ---------------------------------------------------------------------------------> .env.json
-*/
-
-#define ENV_FTP_URL "ftp://seu-ftp-dominio-senha-aqui"
-#define ENV_FTP_SERVER "ftp.seu-dominio.com.br"
-#define ENV_FTP_USER_ID "seu-login"
-#define ENV_FTP_PASSWORD "sua-senha"
-#define ENV_URL_FILES "url-principal-dos-arquivos-pdf-xml"
-
 // GED - Gerenciador Eletrônico de Documentos - via FTP
-
 
 class TgedFTP
    data hostFile init '' PROTECTED
    data remotePath init '' PROTECTED
    data remoteFile init '' PROTECTED
    data urlFile init '' PROTECTED
-   data ftp_url init ENV_FTP_URL PROTECTED
-   data ftp_server init ENV_FTP_SERVER PROTECTED
-   data ftp_userId init ENV_FTP_USER_ID PROTECTED
-   data ftp_password init ENV_FTP_PASSWORD PROTECTED
    data isUpload init False READONLY
    data deletedStatus init False PROTECTED
 
@@ -94,18 +67,18 @@ method upload() class TgedFTP
    ::isUpload := False
 
    if hb_FileExists(::hostFile)
-      url := TUrl():new(::ftp_url)
-      ftp := TIPClientFTP():new(url)
+      url := TUrl():new(appData:ftp_url)
+      ftp := TIPClientFTP():New(url)
       ftp:nConnTimeout := 20000
-      ftp:bUsePasv := True
-      ftp:oURL:cServer := ::ftp_server
-      ftp:oURL:cUserID := ::ftp_userId
-      ftp:oURL:cPassword := ::ftp_password
-      if ftp:open(::ftp_url)
+      ftp:bUsePasv := true
+      ftp:oURL:cServer := appData:ftp_server
+      ftp:oURL:cUserID := appData:ftp_userId
+      ftp:oURL:cPassword := appData:ftp_password
+      if ftp:open(appData:ftp_url)
          url:cPath := 'public_html/' + ::remotePath
          ftp:cwd(url:cPath)
          if ftp:uploadFile(::hostFile, ::remoteFile)
-            ::isUpload := True
+            ::isUpload := true
             saveLog('Upload de arquivo concluído com sucesso')
          else
             saveLog({'Falha no upload de arquivo: ', hb_eol(), 'host file: ', ::hostFile, hb_eol(), 'remote file: ', ::remoteFile})
@@ -128,7 +101,7 @@ method upload() class TgedFTP
 return ::isUpload
 
 method delete() class TgedFTP
-   local url := TUrl():new(::ftp_url)
+   local url := TUrl():new(appData:ftp_url)
    local ftp := TIPClientFTP():new(url)
    local error := 'DELETE - Erro de FTP: '
 
@@ -136,11 +109,11 @@ method delete() class TgedFTP
 
    ftp:nConnTimeout := 20000
    ftp:bUsePasv := True
-   ftp:oURL:cServer := ::ftp_server
-   ftp:oURL:cUserID := ::ftp_userId
-   ftp:oURL:cPassword := ::ftp_password
+   ftp:oURL:cServer := appData:ftp_server
+   ftp:oURL:cUserID := appData:ftp_userId
+   ftp:oURL:cPassword := appData:ftp_password
 
-   if ftp:open(::ftp_url)
+   if ftp:open(appData:ftp_url)
       url:cPath := 'public_html/' + ::remotePath
       ftp:cwd(url:cPath)
       ::deletedStatus := ftp:dele(::remoteFile)

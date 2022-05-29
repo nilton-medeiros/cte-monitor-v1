@@ -127,7 +127,6 @@ function cte_createObject(rowCTe, qObs, qCc, qDoc)
          // tpServ 0 - Normal; 1 - Subcontratação; 2 – Redespacho; 3 – Redespacho Intermediário; 4 – Serviço Vinculado à Multimodal
          if (rowCTe:getField('tpServ') == '0')
             // tpServ (0 - Normal)
-
             if (rowCTe:zeroFill('modal', 2) == '01')
                // Informações do modal Rodoviário
                rodo(cte:infCte:infCTeNorm:infModal:rodo, emitente, rowCTe:getField('id'))
@@ -135,7 +134,6 @@ function cte_createObject(rowCTe, qObs, qCc, qDoc)
                // Imformações do modal Aéreo
                aereo(cte:infCte:infCTeNorm:infModal:aereo, rowCTe, qCc)
             endif
-
             // veicNovos | informações dos veículos transportados
             veicNovos(cte:infCte:infCTeNorm, rowCTe:getField('id'))
 
@@ -225,7 +223,7 @@ procedure ideCTe(ide, rowCTe, emitente)
       :cMunEnv:value := emitente:getField('cMunEnv')
       :xMunEnv:value := emitente:getField('xMunEnv')
       :UFEnv:value := emitente:getField('UF')
-      :modal:raw := rowCTe:getField('modal')
+      :modal:raw := ''  // O raw tem que estar fazio, no xml a prioridade é o raw se não estiver vazio, nesse caso, tem que entrar o modal:value
       :modal:value := rowCTe:zeroFill('modal', 2)
       :tpServ:value := rowCTe:getField('tpServ')
       :cMunIni:value := rowCTe:getField('cMunIni')
@@ -305,8 +303,11 @@ procedure compl(compl, rowCTe, ide, qObs)
          // Modal Aéreo
          :fluxo:submit := True
          :fluxo:xOrig:value := rowCTe:getField('xOrig')
+         :fluxo:xOrig:required := True
          pas := :fluxo:addPass()
-         pas:xPass:value := rowCTe:getField('xPass')
+         if ! Empty(rowCTe:getField('xPass'))
+            pas:xPass:value := rowCTe:getField('xPass')
+         endif
          pas:xDest:value := rowCTe:getField('xDest')
       endif
       :Entrega:setTpPer(rowCTe:getField('tpPer'))
@@ -329,8 +330,8 @@ procedure compl(compl, rowCTe, ide, qObs)
       endif
       :origCalc:value := ide:xMunIni:value
       :destCalc:value := ide:xMunFim:value
-      :xObs:raw := hb_utf8StrTran(rowCTe:getField('xObs'), '\n', ';')
-      :xObs:value := rowCTe:getField('xObs')
+      :xObs:raw := hb_utf8StrTran(removeAccentuation(rowCTe:getField('xObs')), '\n', ';')
+      :xObs:value := removeAccentuation(rowCTe:getField('xObs'))
       if (ide:indGlobalizado:value == '1')
          :xObs:raw := :xObs:raw + ';Procedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017'
          :xObs:value := :xObs:value + '\nProcedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017'
@@ -850,7 +851,7 @@ procedure aereo(aereo, rowCTe, qCc)
       q:Destroy()
       if qCc:isExecuted() .and. !qCc:EOF()
          :tarifa:CL:value := hb_uLeft(qCc:getField('CL'), 1)
-         :tarifa:cTar:value := qCc:getField('xNome')
+         :tarifa:cTar:value := rowCTe:getField('cTar') 
          :tarifa:vTar:value := qCc:getField('vTar')
       endif
    endwith
