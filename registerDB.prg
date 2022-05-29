@@ -125,5 +125,5 @@ method convert(ip) class TIPaddress
          ::arrayIP[n] := Val(::arrayIP[n])
       next
    endif
->>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
+
 return nil

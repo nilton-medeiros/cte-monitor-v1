@@ -147,4 +147,3 @@ procedure main_timerCTe_action()
    SetProperty('Main', 'TimerCTe', 'Enabled', True)
 
 return
->>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1

@@ -254,4 +254,3 @@ procedure updateCTeErrors(cte_sefaz, eventStatus)
    saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k+i), ' Evento(s) com sucesso'})
 
 return
->>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1

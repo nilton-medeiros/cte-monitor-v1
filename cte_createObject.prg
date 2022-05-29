@@ -933,5 +933,4 @@ procedure infGlobalizado(infCte)
       endif
    endwith
 
->>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
 return

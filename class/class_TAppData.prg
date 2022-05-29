@@ -263,4 +263,3 @@ method setUTC(emp_id) class TAppData
    local emitente := ::getCompanies(emp_id)
    ::UTC := emitente:getField('utc')
 return Nil
->>>>>>> 8405ead09b4015ff1d1ac04462811b7a07f266a1
