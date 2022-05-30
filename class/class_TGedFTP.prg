@@ -73,7 +73,7 @@ method upload() class TgedFTP
       ftp:nConnTimeout := 20000
       ftp:bUsePasv := true
       ftp:oURL:cServer := appData:ftp_server
-      ftp:oURL:cUserID := appData:ftp_userId
+      ftp:oURL:cUserID := appData:ftp_Id
       ftp:oURL:cPassword := appData:ftp_password
       if ftp:open(appData:ftp_url)
          url:cPath := 'public_html/' + ::remotePath

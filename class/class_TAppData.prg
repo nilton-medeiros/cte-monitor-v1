@@ -35,7 +35,7 @@
 #include "hbclass.ch"
 
 
-// Atualizado: 2022-05-29 14:41
+// Atualizado: 2022-05-30 10:30
 class TAppData
 
    data MySQLDataSource
