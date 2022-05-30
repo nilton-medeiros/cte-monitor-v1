@@ -1,6 +1,7 @@
 #include <hmg.ch>
 #include <fileio.ch>
 
+// Atualziação: 2022-05-30 as 20:30 - tag emp_simples_nacional AS CRT
 procedure loadCompanies()
 		local sql := TSQLString():new()
 		local e, i
@@ -34,6 +35,7 @@ procedure loadCompanies()
 			sql:add := "emp_email_comercial AS email, "
 			sql:add := "emp_seguradora AS seguradora, "
 			sql:add := "emp_apolice AS apolice, "
+			sql:add := "emp_simples_nacional AS CRT, "
 			sql:add := "IF(emp_dacte_layout='RETRATO', '1', '2') AS tpImp "
 			sql:add := "FROM view_empresas "
 			sql:add := "WHERE emp_ativa = 1 AND emp_tipo_emitente = 'CTE' AND emp_ambiente_sefaz IN (1,2) "

@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-// Atualziado: 2022-05-29 14:57
+// Atualziado: 2022-05-30 20:30
 function cte_createObject(rowCTe, qObs, qCc, qDoc)
    local cte := TCTe():new(appData:ACBr, appData:UTC, appData:systemPath)
    local emitente := appData:getCompanies(rowCTe:getField('emp_id'))
@@ -378,6 +378,16 @@ procedure emit(emit, emitente)
       :enderEmit:UF:value := emitente:getField('UF')
       :fone:value := emitente:getField('fone')
       :fone:raw := onlyNumbers(:fone:value)
+      
+      if DtoS(Date()) > "20220630"
+         /* NT 2022.001v.1.00 - A partir de 01/07/22 nova tag obrigatória CRT - Código do Regime Tributário
+            1 - Simples Nacional;
+            2 - Simples Nacional, excesso sublimite de receita bruta;
+            3 - Regime Normal.
+            AP = 1 e LW =3
+         */
+         :CRT:value := iif(emitente:getField('CRT') == 1, "1", "3")
+      endif
    endwith
 return
 
