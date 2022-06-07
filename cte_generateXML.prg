@@ -33,9 +33,10 @@
 
 #include <hmg.ch>
 
-// Atualizado: 2022-05-29 15:00
+// Atualziado: 2022-06-07 15:30 | Troca da propriedade tpAmb para xTpAmb class TACBrMonitor
+
 procedure cte_generateXML(cte)
-   local sefaz, p, temp_x
+   local sefaz, p
    local emitente := appData:getCompanies(cte:InfCte:emit:id)
 
    if cte:validarCTe() .and. cte:criarCTeXML()
@@ -48,12 +49,7 @@ procedure cte_generateXML(cte)
              'situacao' => cte:situacao,;
              'emitCNPJ' => cte:infCte:emit:CNPJ:value,;
              'dhEmi' => cte:infCte:ide:dhEmi:value,;
-             'tpAmb' => emitente:getField('tpAmb')}
-      
-      // Início: Debug 2022-06-07
-      temp_x := emitente:getField('tpAmb')
-      saveLog({'Debug: Emitente:tpAmb = ', temp_x, ' | Type emitente:tpAmb: ', ValType(temp_x)})
-      // Fim: Debug 2022-06-07 - Deletar estas linhas após debug
+             'tpAmb' => emitente:getField('tpAmb')}   // Caracter '1' ou '2'
 
       sefaz := TACBrMonitor():new(p)
 

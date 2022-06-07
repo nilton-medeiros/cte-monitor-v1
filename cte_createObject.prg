@@ -34,6 +34,7 @@
 #include <hmg.ch>
 
 // Atualziado: 2022-05-30 20:30
+
 function cte_createObject(rowCTe, qObs, qCc, qDoc)
    local cte := TCTe():new(appData:ACBr, appData:UTC, appData:systemPath)
    local emitente := appData:getCompanies(rowCTe:getField('emp_id'))
