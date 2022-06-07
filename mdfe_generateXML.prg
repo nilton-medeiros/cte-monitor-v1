@@ -79,7 +79,7 @@ procedure updateMDFeStatus(sefaz)
    s:add("cMDF = '" + sefaz:chDFe + "', ")
 
    if (hmg_len(sefaz:events) == 0)
-      AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'Sem resposta da Sefaz, verifique seu servidor local | Ambiente de ' + sefaz:tpAmb})
+      AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'Sem resposta da Sefaz, verifique seu servidor local | Ambiente de ' + sefaz:xTpAmb})
    endif
 
    for each e in sefaz:events
@@ -121,7 +121,7 @@ procedure updateMDFeStatus(sefaz)
       endif
       adMsg := {' |PDF: ', iif(pdfUpdated, 'upload com sucesso', 'falha no upload'), ' |XML: ', iif(xmlUpdated, 'upload com sucesso', 'falha no upload')}
       if !xmlUpdated .or. !pdfUpdated
-         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, avise ao suporte | Ambiente de ' + sefaz:tpAmb})
+         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, avise ao suporte | Ambiente de ' + sefaz:xTpAmb})
       endif
 
    endif

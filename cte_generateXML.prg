@@ -35,7 +35,7 @@
 
 // Atualizado: 2022-05-29 15:00
 procedure cte_generateXML(cte)
-   local sefaz, p
+   local sefaz, p, temp_x
    local emitente := appData:getCompanies(cte:InfCte:emit:id)
 
    if cte:validarCTe() .and. cte:criarCTeXML()
@@ -49,6 +49,11 @@ procedure cte_generateXML(cte)
              'emitCNPJ' => cte:infCte:emit:CNPJ:value,;
              'dhEmi' => cte:infCte:ide:dhEmi:value,;
              'tpAmb' => emitente:getField('tpAmb')}
+      
+      // Início: Debug 2022-06-07
+      temp_x := emitente:getField('tpAmb')
+      saveLog({'Debug: Emitente:tpAmb = ', temp_x, ' | Type emitente:tpAmb: ', ValType(temp_x)})
+      // Fim: Debug 2022-06-07 - Deletar estas linhas após debug
 
       sefaz := TACBrMonitor():new(p)
 
@@ -81,7 +86,7 @@ procedure updateCTeStatus(sefaz)
    s:add("cte_chave = '" + sefaz:chDFe + "', ")
 
    if (hmg_len(sefaz:events) == 0)
-      AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'Sem resposta da Sefaz, verifique seu servidor local | Ambiente de ' + sefaz:tpAmb})
+      AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'Sem resposta da Sefaz, verifique seu servidor local | Ambiente de ' + sefaz:xTpAmb})
    endif
 
    for each e in sefaz:events
@@ -123,7 +128,7 @@ procedure updateCTeStatus(sefaz)
       endif
       adMsg := {' |PDF: ', iif(pdfUpdated, 'upload com sucesso', 'falha no upload'), ' |XML: ', iif(xmlUpdated, 'upload com sucesso', 'falha no upload')}
       if !xmlUpdated .or. !pdfUpdated
-         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, avise ao suporte | Ambiente de ' + sefaz:tpAmb})
+         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, avise ao suporte | Ambiente de ' + sefaz:xTpAmb})
       endif
       // Se uma das duplas foram geradas, muda o status de ctes_arquivos_baixados para 1, que será usado pelo CTeMail
       if (!Empty(sefaz:xmlName) .and. !Empty(sefaz:pdfName)) .or. (!Empty(sefaz:xmlCancel) .and. !Empty(sefaz:pdfCancel))
