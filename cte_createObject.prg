@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-// Atualziado: 2022-05-30 20:30
+// Atualziado: 2022-06-30 10:40
 
 function cte_createObject(rowCTe, qObs, qCc, qDoc)
    local cte := TCTe():new(appData:ACBr, appData:UTC, appData:systemPath)
@@ -387,6 +387,8 @@ procedure emit(emit, emitente)
             3 - Regime Normal.
             AP = 1 e LW =3
          */
+         xyz := emitente:getField('CRT') == 1
+         MsgDebugInfo('Type: ' + ValType(xyz), hb_eol(), 'Result: ', xyz)
          :CRT:value := iif(emitente:getField('CRT') == 1, "1", "3")
       endif
    endwith
