@@ -386,8 +386,9 @@ procedure emit(emit, emitente)
             2 - Simples Nacional, excesso sublimite de receita bruta;
             3 - Regime Normal.
             AP = 1 e LW =3
+          ** Deveria ter entrado em 01/07 mas não entrou, Sefaz não seguiu data prevista no manual!
          */
-      :CRT:value := iif(emitente:getField('CRT') == "1", "1", "3")
+      //:CRT:value := iif(emitente:getField('CRT') == "1", "1", "3")
       endif
    endwith
 return
