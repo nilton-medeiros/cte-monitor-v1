@@ -1,6 +1,5 @@
 1 VERSIONINFO
-  FILEVERSION 1,2,72
-{
+  FILEVERSION 1,2,77{
     BLOCK "StringFileInfo"
     {
         BLOCK "040904E4"
@@ -10,7 +9,7 @@
             VALUE "LegalCopyright"   , "Copyright (c) Sistrom Web"
             VALUE "OriginalFilename" , "CTeMonitor.exe"
             VALUE "ProductName"      , "CTe Monitor"
-            VALUE "ProductVersion"   , "1.2.72re.Hb.MS"
+            VALUE "ProductVersion"   , "1.2.77re.Hb.MS"
         }
     }
     BLOCK "VarFileInfo"
