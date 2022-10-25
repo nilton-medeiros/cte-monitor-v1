@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-// Atualziado: 2022-10-20 12:00
+// Atualizado: 2022-10-25 16:30
 
 function cte_createObject(rowCTe, qObs, qCc, qDoc)
    local cte := TCTe():new(appData:ACBr, appData:UTC, appData:systemPath)
