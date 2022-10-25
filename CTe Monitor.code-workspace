@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"harbour.compilerExecutable": "C:\\hmg.3.4.4\\HARBOUR\\bin\\harbour.exe",
+		"harbour.extraIncludePaths": [
+			"C:\\hmg.3.4.4\\INCLUDE",
+			"C:\\hmg.3.4.4\\HARBOUR\\include"
+		]
+	}
+}

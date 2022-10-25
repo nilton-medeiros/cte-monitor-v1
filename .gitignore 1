@@ -1,0 +1,13 @@
+log
+temp
+tmp
+*.log
+.hbmk
+*.exe
+*.htm
+.env
+env.json
+.env.json
+.TGedFTP.env
+.github.txt
+*.ex*

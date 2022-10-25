@@ -1,0 +1,8 @@
+inc=yes
+head=native
+libs=sistrom_ACBrMonitor
+libs=sistrom_comp
+libs=sistrom_xmlCTe
+libs=sistrom_xmlMDFe
+libs=sistrom_xmlFunctions
+warn=max

@@ -1,0 +1,16 @@
+Lib de classes para lidar com XML
+		Lib de Classes XML sistrom_xmlCTe
+		Lib de Classes XML sistrom_xmlNFe
+		Lib de Classes XML sistrom_xmlCFeSAT
+		Lib de Classes XML sistrom_xmlNFCe
+		Lib de Classes XML sistrom_xmlNFSe
+	Lib de Funções auxiliares ao XML
+
+Lib de Classes ACBrMonitor sistrom_integraACBrMonitor
+	classe de setup ACBr
+	Classes de integração do CTe
+	Classes de integração do NFe
+	Classes de integração do CFeSAT
+	Classes de integração do NFCe
+	Classes de integração do NFSe
+
