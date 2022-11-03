@@ -33,7 +33,8 @@
 
 #include <hmg.ch>
 
-// Atualziado: 2022-10-20 12:00
+// Atualizado: 2022-11-03 12:30
+/* Adicionado regra para o DIFAL, destinatário tem que ser o tomador */
 
 function cte_createObject(rowCTe, qObs, qCc, qDoc)
    local cte := TCTe():new(appData:ACBr, appData:UTC, appData:systemPath)
@@ -594,7 +595,8 @@ procedure imp(imp, rowCTe)
       if (rowCTe:getField('tpCTe') $ '013') .and.; // Tipo de CTe (tpCTe) = 0-Normal, 1-Complemento de Valores, 3-Substituto
          ! (rowCTe:getField('UFIni') == rowCTe:getField('UFFim')) .and.; // e UF de término do serviço de transporte na operação interestadual
          (rowCTe:getField('tpServ') == '0') .and.; // e Tipo de Serviço = 0-Normal
-         (rowCTe:getField('des_icms') == '0') // e consumidor (destinatário) não contribuinte do ICMS
+         (rowCTe:getField('des_icms') == '0') .and.; // e consumidor (destinatário) não contribuinte do ICMS
+         (rowCTe:getField('cte_tomador') == '3')    // Tomador tem que ser o DESTINATÁRIO
          :ICMSUFFim := True
          // DIFAL - Diferença de Alíquota | FCP - Fundo de Combate a Pobreza | Arquivo SeFaz: CTe_Nota_Tecnica_2015_004.pdf (Pagina 4)
          :vBCUFFim:value := rowCTe:getField('vTPrest') // cte_valor_total | Informar o Valor da Base de Cáclculo do ICMS na UF de término da prestação do serviço de transporte.
