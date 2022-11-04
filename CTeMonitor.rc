@@ -9,7 +9,7 @@
             VALUE "LegalCopyright"   , "Copyright (c) Sistrom Web"
             VALUE "OriginalFilename" , "CTeMonitor.exe"
             VALUE "ProductName"      , "CTe Monitor"
-            VALUE "ProductVersion"   , "1.2.81re.Hb.MS"
+            VALUE "ProductVersion"   , "1.2.81.Hb.MS"
         }
     }
     BLOCK "VarFileInfo"
