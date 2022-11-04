@@ -84,13 +84,13 @@ procedure updateCTeStatus(sefaz, up_cte)
    if ValType(up_cte) == 'O'
       with object up_cte:infCte:imp
          s:add("cte_tem_difal = " + iif(:tem_difal, '1', '0') + ", ")
-         s:add("pUF_inicio = " + :pICMSInter + ", ")
-         s:add("pUF_fim = " + :pICMSUFFim + ", ")
-         s:add("pFCP = " + :pFCPUFFim + ", ")
-         s:add("vFCP = " + :vFCPUFFim + ", ")
+         s:add("pUF_inicio = " + :pICMSInter:value + ", ")
+         s:add("pUF_fim = " + :pICMSUFFim:value + ", ")
+         s:add("pFCP = " + :pFCPUFFim:value + ", ")
+         s:add("vFCP = " + :vFCPUFFim:value + ", ")
          s:add("pDIFAL = " + :pDIFAL + ", ")
          s:add("vDIFAL = " + :vDIFAL + ", ")
-         s:add("vICMS_uf_fim = " + :vICMSUFFim + ", ")
+         s:add("vICMS_uf_fim = " + :vICMSUFFim:value + ", ")
       endwith
    endif
 
@@ -152,7 +152,8 @@ procedure updateCTeStatus(sefaz, up_cte)
    
    if !q:isExecuted()
       q:Destroy()
-      return
+      RegistryWrite(::registryPath + "Monitoring\DontRun", 1)
+      turnOFF()
    endif
    q:Destroy()
    AAdd(msg, sefaz:dfe_id)

@@ -597,13 +597,13 @@ procedure imp(imp, rowCTe)
          (rowCTe:getField('tpServ') == '0') .and.; // e Tipo de Serviço = 0-Normal
          (rowCTe:getField('des_icms') == '0') .and.; // e consumidor (destinatário) não contribuinte do ICMS
          (rowCTe:getField('cte_tomador') == '3')    // Tomador tem que ser o DESTINATÁRIO
-         :ICMSUFFim := True
-         // DIFAL - Diferença de Alíquota | FCP - Fundo de Combate a Pobreza | Arquivo SeFaz: CTe_Nota_Tecnica_2015_004.pdf (Pagina 4)
-         :vBCUFFim:value := rowCTe:getField('vTPrest') // cte_valor_total | Informar o Valor da Base de Cáclculo do ICMS na UF de término da prestação do serviço de transporte.
+         
+         /* A T E N Ç Ã O  :  ESTE IF SE ALTERADO, MUDAR TAMBÉM EM class_TCTe.prg liha 442*/ 
+         
          if :ICMSSN:submit
             /*
-             * As empresas optantes pelo Simples Nacional podem deixar de recolher o DIFAL em função da suspensão da cobrança
-             * concedida pela liminar proferida na Ação Direta de Inconstitucionalidade – ADI 5464.
+            * As empresas optantes pelo Simples Nacional podem deixar de recolher o DIFAL em função da suspensão da cobrança
+            * concedida pela liminar proferida na Ação Direta de Inconstitucionalidade – ADI 5464.
             */
             :pFCPUFFim:value := '0.00' // Informar a Percentual de ICMS correspondente ao Fundo de Combate à pobreza na UF de término da prestação. (NT2015/004)
             :pICMSUFFim:value := '0.00' // Informar a Alíquota interna da UF de término da prestação do serviço de transporte.
@@ -611,7 +611,12 @@ procedure imp(imp, rowCTe)
             :vFCPUFFim:value := '0.00' // Informar o Valor de ICMS correspondente ao Fundo de Combate à pobreza na UF de término da prestação. (NT2015/004)
             :vICMSUFFim:value := '0.00' // Informar o Valor do ICMS de partilha para a UF de término da prestação do serviço de transporte.
             :vICMSUFIni:value := '0.00' // Informar o Valor do ICMS de partilha para a UF de início da prestação do serviço de transporte.
+            saveLog("DIFAL INSETO - SIMPLES NACIONAL")
          else
+            saveLog("DIFAL CALCULADO")
+            :ICMSUFFim := True
+            // DIFAL - Diferença de Alíquota | FCP - Fundo de Combate a Pobreza | Arquivo SeFaz: CTe_Nota_Tecnica_2015_004.pdf (Pagina 4)
+            :vBCUFFim:value := rowCTe:getField('vTPrest') // cte_valor_total | Informar o Valor da Base de Cáclculo do ICMS na UF de término da prestação do serviço de transporte.
             difal := calcDifal(rowCTe:getField('UFIni'), rowCTe:getField('UFFim'), Val(:vBCUFFim:value))
             :tem_difal := difal['tem_difal']
             :pDIFAL := hb_ntos(difal['pDIFAL'])
