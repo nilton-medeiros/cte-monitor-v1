@@ -613,7 +613,10 @@ procedure imp(imp, rowCTe)
             :vICMSUFIni:value := '0.00' // Informar o Valor do ICMS de partilha para a UF de início da prestação do serviço de transporte.
          else
             difal := calcDifal(rowCTe:getField('UFIni'), rowCTe:getField('UFFim'), Val(:vBCUFFim:value))
-            :pFCPUFFim:value := difal['pFCPUFFim'] // Informar a Percentual de ICMS correspondente ao Fundo de Combate à pobreza na UF de término da prestação. (NT2015/004)
+            :tem_difal := difal['tem_difal']
+            :pDIFAL := hb_ntos(difal['pDIFAL'])
+            :vDIFAL := hb_ntos(difal['vDIFAL'])
+            :pFCPUFFim:value := difal['pFCPUFFim'] // Informar o Percentual de ICMS correspondente ao Fundo de Combate à pobreza na UF de término da prestação. (NT2015/004)
             :pICMSUFFim:value := difal['pICMSUFFim'] // Informar a Alíquota interna da UF de término da prestação do serviço de transporte.
             :pICMSInter:value := difal['pICMSInter'] // Informar a Alíquota interestadual das UF envolvidas
             :vFCPUFFim:value := difal['vFCPUFFim'] // Informar o Valor de ICMS correspondente ao Fundo de Combate à pobreza na UF de término da prestação. (NT2015/004)
@@ -627,7 +630,7 @@ procedure imp(imp, rowCTe)
 return
 
 function calcDifal(uf_origem, uf_destino, valorPrestacao)
-   local calcDifal := {'pFCPUFFim' => '0.00', 'pICMSUFFim' => '0.00', 'pICMSInter' => '0.00', 'vFCPUFFim' => '0.00', 'vICMSUFFim' => '0.00', 'vICMSUFIni' => '0.00'}
+   local calcDifal := {'pFCPUFFim' => '0.00', 'pICMSUFFim' => '0.00', 'pICMSInter' => '0.00', 'vFCPUFFim' => '0.00', 'vICMSUFFim' => '0.00', 'vICMSUFIni' => '0.00', 'tem_difal' => False, 'pDIFAL' => 0, 'vDIFAL' => 0}
    local s, q
    local pInter, pFim, vFCP
    if !(uf_destino $ 'AC|AL|AM|BA|CE|DF|ES|GO|MA|MG|MS|MT|PB|PE|PI|PR|RJ|RN|RO|RR|RS|SE|SP|TO')
@@ -667,8 +670,11 @@ function calcDifal(uf_origem, uf_destino, valorPrestacao)
          calcDifal['pICMSUFFim'] := LTrim(Transform(pFim, "99.99"))
          calcDifal['pICMSInter'] := LTrim(Transform(pInter, "99.99"))
          if (pFim > pInter)
-            calcDifal['vICMSUFFim'] := LTrim(Transform((valorPrestacao * ((pFim - pInter)/100)) + vFCP, "99999999.99"))
+            calcDifal['pDIFAL'] := pFim - pInter
+            calcDifal['vDIFAL'] := valorPrestacao * (calcDifal['pDIFAL']/100)
+            calcDifal['vICMSUFFim'] := hb_ntos(calcDifal['vDIFAL'] + vFCP)
          endif
+         calcDifal['tem_difal'] := True
       else
          saveLog({'Consulta SQL não retornou dois registros necessários: SQL: ' + s:value})
       endif

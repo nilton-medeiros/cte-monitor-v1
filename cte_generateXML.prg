@@ -134,7 +134,9 @@ procedure updateCTeStatus(sefaz)
 
    s:add("cte_monitor_action = 'EXECUTED' " )
    s:add("WHERE cte_id = " + sefaz:dfe_id)
+
    q := TSQLQuery():new(s:value)
+   
    if !q:isExecuted()
       q:Destroy()
       return
