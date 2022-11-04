@@ -82,8 +82,8 @@ procedure updateCTeStatus(sefaz, up_cte)
    s:add("cte_chave = '" + sefaz:chDFe + "', ")
 
    if ValType(up_cte) == 'O'
-      with up_cte:infCte:imp
-         s:add("cte_tem_difal = " + iif(:tem_difal, '1', '0') + ", "
+      with object up_cte:infCte:imp
+         s:add("cte_tem_difal = " + iif(:tem_difal, '1', '0') + ", ")
          s:add("pUF_inicio = " + :pICMSInter + ", ")
          s:add("pUF_fim = " + :pICMSUFFim + ", ")
          s:add("pFCP = " + :pFCPUFFim + ", ")
