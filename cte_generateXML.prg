@@ -60,14 +60,14 @@ procedure cte_generateXML(cte)
             endif
          endif
       endif
-      updateCTeStatus(sefaz)
+      updateCTeStatus(sefaz, cte)
    else
       updateCTeErrors(cte)
    endif
 
 return
 
-procedure updateCTeStatus(sefaz)
+procedure updateCTeStatus(sefaz, up_cte)
    local adMsg := {}, msg := {'Atualizado TMS.CLOUD |CTe Id: '}
    local xml, pdf, i := 0
    local e, q, s := TSQLString():new("UPDATE ctes SET ")
@@ -80,6 +80,19 @@ procedure updateCTeStatus(sefaz)
    
    s:add("cte_situacao = '" + sefaz:situacao + "', ")
    s:add("cte_chave = '" + sefaz:chDFe + "', ")
+
+   if ValType(up_cte) == 'O'
+      with up_cte:infCte:imp
+         s:add("cte_tem_difal = " + iif(:tem_difal, '1', '0') + ", "
+         s:add("pUF_inicio = " + :pICMSInter + ", ")
+         s:add("pUF_fim = " + :pICMSUFFim + ", ")
+         s:add("pFCP = " + :pFCPUFFim + ", ")
+         s:add("vFCP = " + :vFCPUFFim + ", ")
+         s:add("pDIFAL = " + :pDIFAL + ", ")
+         s:add("vDIFAL = " + :vDIFAL + ", ")
+         s:add("vICMS_uf_fim = " + :vICMSUFFim + ", ")
+      endwith
+   endif
 
    if (hmg_len(sefaz:events) == 0)
       AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'Sem resposta da Sefaz, verifique seu servidor local | Ambiente de ' + sefaz:xTpAmb})
