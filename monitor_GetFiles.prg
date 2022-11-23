@@ -62,7 +62,7 @@ procedure monitorGetFiles()
       sql:add(" AND cte_situacao = 'AUTORIZADO' ")
       sql:add(" AND NOT ISNULL(cte_chave) AND cte_chave != ''")
       sql:add(" AND cte_monitor_action = 'GETFILES' ")
-      sql:add(" AND TIMESTAMPDIFF(MINUTE , cte_getfiles_date, " + dateTime_hb_to_mysql(Date(), Time()) + ") > 5 ")
+      sql:add(" AND TIMESTAMPDIFF(MINUTE, cte_getfiles_date, " + dateTime_hb_to_mysql(Date(), Time()) + ") > 5 ")
       sql:add("ORDER BY emp_id, cte_numero")
 
       qCTe := TSQLQuery():new(sql:value)
@@ -92,14 +92,84 @@ procedure getFiles(cte)
       local pdfFile := pdfPath + defPath + chave + '-cte.pdf'
       local emitente := Memvar->appData:getCompanies(cte:getField('emp_id'))
       local remotePath := emitente:getField('remote_file_path') + '/ctes/files'
-      local up
-      local s := TSQLString():new("UPDATE ctes SET ")
+      local acao := 'EXECUTED'
+      local e, i, msg := {}
+      local up, q, s := TSQLString():new("UPDATE ctes SET ")
 
       if hb_FileExists(xmlFile)
          up := TgedFTP():new(xmlFile, remotePath)
-      if up:upload()
-         s:add("cte_xml = '" + up:getURL() + "', ")
+         if up:upload()
+            s:add("cte_xml = '" + up:getURL() + "', ")
+            AAdd(msg, 'FTP: Upload do XML executado com sucesso')
+            saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - FTP: Upload do XML executado com sucesso'})
+         else
+            AAdd(msg, 'FTP: Falha ao fazer upload do XML, verifique a internet do servidor e avise o suporte!')
+            saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - FTP: Falha ao fazer upload do XML'})
+         endif
+      else
+         acao := 'SUBMIT'
+         AAdd(msg, 'Arquivo XML não foi encontrado, solicitando novamente, aguarde...')
+         saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - Arquivo XML não encontrado', 'File: ' + xmlFile})
+      endif
+      
+      up := NIL
+
+      if hb_FileExists(pdfFile)
+         up := TgedFTP():new(pdfFile, remotePath)
+         if up:upload()
+            s:add("cte_pdf = '" + up:getURL() + "', ")
+            AAdd(msg, 'FTP: Upload do PDF executado com sucesso')
+            saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - FTP: Upload do PDF executado com sucesso'})
+         else
+            AAdd(msg, 'FTP: Falha ao fazer upload do PDF, verifique a internet do servidor e avise o suporte!')
+            saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - FTP: Falha ao fazer upload do PDF'})
+         endif
+      else
+         acao := 'SUBMIT'
+         AAdd(msg, 'Arquivo PDF não foi encontrado, solicitando novamente, aguarde...')
+         saveLog({'CTe ID: ', cte:getField('cte_id'), 'GETFILES - Arquivo PDF não encontrado', 'File: ' + pdfFile})
       endif
 
+      s:add("cte_getfiles_date = " + dateTime_hb_to_mysql(Date(), Time()) + ", ")      
+      s:add("cte_monitor_action = '" + acao + "' ")
+      s:add("WHERE cte_id = " + cte:getField('cte_id'))
 
+      q := TSQLQuery():new(s:value)
+      
+      saveLog(s:value)  // Passar essa linha para baixo de !q:isExecuted() depois de verificar o SQL no log.
+
+      if ! q:isExecuted()
+         q:Destroy()
+         RegistryWrite(::registryPath + "Monitoring\DontRun", 1)
+         turnOFF()
+      endif
+      
+      q:Destroy()
+   
+      // Nova Query
+      s:setValue("INSERT INTO ctes_eventos (cte_id, cte_ev_protocolo, cte_ev_data_hora, cte_ev_evento, cte_ev_detalhe) VALUES ")
+
+      i := 0
+
+      for each e in msg
+         i++
+         s:add(iif((i==1), [(], [, (])) // Inicio dos VALUES
+         s:add(cte:getField('cte_id') + ", ")
+         s:add("'CTeMonitor', ")
+         s:add(dateTime_hb_to_mysql(Date(), Time()) + ", ")
+         s:add("'000', ")
+         s:add("'" + string_hb_to_MySQL(e) + "')") // fechamento dos VALUES
+      next
+
+      if ! (i == 0)
+         q := TSQLQuery():new(s:value)
+         if ! q:isExecuted()
+            saveLog(q:value)
+            q:Destroy()
+            turnOFF()
+         endif
+         q:Destroy()
+         saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cte:getField('cte_id'), ' |Atualizado ', hb_ntos(i), ' Evento(s) com sucesso'})
+      endif
+      
 return
