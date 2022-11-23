@@ -136,16 +136,21 @@ procedure updateCTeStatus(sefaz, up_cte)
          pdfUpdated := pdf:isUpload
       endif
       adMsg := {' |PDF: ', iif(pdfUpdated, 'upload com sucesso', 'falha no upload'), ' |XML: ', iif(xmlUpdated, 'upload com sucesso', 'falha no upload')}
-      if !xmlUpdated .or. !pdfUpdated
-         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, avise ao suporte | Ambiente de ' + sefaz:xTpAmb})
-      endif
       // Se uma das duplas foram geradas, muda o status de ctes_arquivos_baixados para 1, que será usado pelo CTeMail
       if (!Empty(sefaz:xmlName) .and. !Empty(sefaz:pdfName)) .or. (!Empty(sefaz:xmlCancel) .and. !Empty(sefaz:pdfCancel))
          s:add("cte_arquivos_baixados = 1, ")
       endif
+      if !xmlUpdated .or. !pdfUpdated
+         AAdd(sefaz:events, {'dhRecbto' => dateTime_hb_to_mysql(Date(), Time()), 'nProt' => 'CTeMonitor', 'cStat' => '000', 'xMotivo' => 'FTP: Falha ao fazer upload do PDF/XML, verifique a internet do servidor, nova tentativa em 5 minutos. | Ambiente de ' + sefaz:xTpAmb})
+         s:add("cte_getfiles_date = " + dateTime_hb_to_mysql(Date(), Time()) + ", ")
+         s:add("cte_monitor_action = 'GETFILES' ")
+      endif
    endif
 
-   s:add("cte_monitor_action = 'EXECUTED' " )
+   if ! ('GETFILES' $ s:value)
+      s:add("cte_monitor_action = 'EXECUTED' ")
+   endif
+
    s:add("WHERE cte_id = " + sefaz:dfe_id)
 
    q := TSQLQuery():new(s:value)
