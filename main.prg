@@ -142,7 +142,7 @@ procedure main_timerCTe_action()
    if ((Seconds() - appData:timer) >= appData:frequency)
       monitorCTe()
       monitorMDFe()
-      monitorGetFiles()
+      //monitorGetFiles()
       appData:timer := Seconds()
    endif
 

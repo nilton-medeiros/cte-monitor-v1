@@ -219,6 +219,8 @@ procedure monitorCTe()
                   submitCTe(rowCTe)
                   exit
                case 'GETFILES'
+                  submitCTe(rowCTe)
+                  exit
                case 'CANCEL'
                   cancelCTe(rowCTe)
                   exit
