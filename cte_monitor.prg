@@ -204,7 +204,7 @@ procedure monitorCTe()
          sql:add(")")
       endif
 
-      sql:add(" AND cte_monitor_action IN ('SUBMIT','CANCEL','INUTILIZE') ")
+      sql:add(" AND cte_monitor_action IN ('SUBMIT','GETFILES','CANCEL','INUTILIZE') ")
       sql:add("ORDER BY cte_monitor_action, emp_id, cte_numero")
       queryCTe := TSQLQuery():new(sql:value)
       if queryCTe:isExecuted()
@@ -218,6 +218,7 @@ procedure monitorCTe()
                case 'SUBMIT'
                   submitCTe(rowCTe)
                   exit
+               case 'GETFILES'
                case 'CANCEL'
                   cancelCTe(rowCTe)
                   exit
@@ -326,7 +327,7 @@ procedure submitCTe(rowCTe)
    queryObs:Destroy()
    queryCompCalc:Destroy()
    queryDoc:Destroy()
-   cte_generateXML(cte)
+   cte_generateXML(cte, rowCTe:getField('cte_monitor_action'))
    cte := Nil
    msgNotify()
 

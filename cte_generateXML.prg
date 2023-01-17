@@ -35,9 +35,11 @@
 
 // Atualziado: 2022-06-07 15:30 | Troca da propriedade tpAmb para xTpAmb class TACBrMonitor
 
-procedure cte_generateXML(cte)
+procedure cte_generateXML(cte, action)
    local sefaz, p
    local emitente := appData:getCompanies(cte:InfCte:emit:id)
+
+   default action := ''
 
    if cte:validarCTe() .and. cte:criarCTeXML()
       // {'DFe' => ['CTe'|'MDFe'], 'chDFe' => , 'dfeId' => , 'sysPath' => , 'remotePath' => , 'situacao' => , 'emitCNPJ' => , 'dhEmi' => , 'tpAmb' => emitente:getField('tpAmb')}
@@ -55,7 +57,12 @@ procedure cte_generateXML(cte)
 
       if sefaz:ObterCertificado()
          if sefaz:Assinar() .and. sefaz:Validar()
-            if !sefaz:Enviar()
+            if action == 'GETFILES'
+               if !sefaz:Consultar()
+                  sefaz:StatusServico()
+               endif
+            else
+               if !sefaz:Enviar()
                sefaz:StatusServico()
             endif
          endif
