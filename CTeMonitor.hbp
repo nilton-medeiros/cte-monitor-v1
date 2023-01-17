@@ -9,9 +9,9 @@ class\class_TSQLString.prg
 cte_createObject.prg
 cte_generateXML.prg
 cte_monitor.prg
-monitor_GetFiles.prg
 mdfe_createObject.prg
 mdfe_generateXML.prg
 mdfe_monitor.prg
+monitor_GetFiles.prg
 registerDB.prg
 setup.prg

@@ -35,14 +35,14 @@
 
 // Atualizado: 2022-11-23 00:04
 procedure monitorGetFiles()
-      local qCte, rowCTe, e, n := 1, 
+      local qCte, rowCTe, e, n := 1
       local sql := TSQLString():new()
 
       sql:setValue("SELECT cte_id, ")
       sql:add("emp_id, ")
       sql:add("cte_numero, ")
       sql:add("cte_chave ")
-      sql:add("FROM view_ctes ")
+      sql:add("FROM ctes ")
 
       if (hmg_len(appData:companies) == 1)
          e := appData:companies[1]
