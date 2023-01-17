@@ -63,7 +63,8 @@ procedure cte_generateXML(cte, action)
                endif
             else
                if !sefaz:Enviar()
-               sefaz:StatusServico()
+                  sefaz:StatusServico()
+               endif
             endif
          endif
       endif

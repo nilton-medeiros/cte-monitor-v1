@@ -12,6 +12,5 @@ cte_monitor.prg
 mdfe_createObject.prg
 mdfe_generateXML.prg
 mdfe_monitor.prg
-monitor_GetFiles.prg
 registerDB.prg
 setup.prg
