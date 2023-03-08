@@ -45,7 +45,7 @@ CLASS TSQLQuery
 		method isExecuted(noWarning)
 		method getQuery() INLINE ::query
 		method getRow(nRow) INLINE ::query:getRow(nRow)
-		method getField()
+		method getField(params)
 		method goTop() INLINE ::query:goTop()
 		method goTo(nRow) INLINE ::query:goTo(nRow)
 		method EOF() INLINE ::query:EOF()

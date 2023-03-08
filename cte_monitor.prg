@@ -320,6 +320,8 @@ procedure submitCTe(rowCTe)
    sql:add("FROM ctes_documentos ")
    sql:add(where:value)
    queryDoc := TSQLQuery():new(sql:value)
+   //saveLog({"SQL de cte_documentos:", hb_eol(), sql:value})
+   
    if !queryDoc:isExecuted()
       //MsgDebug(queryDoc)
       queryDoc:Destroy()

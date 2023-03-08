@@ -699,7 +699,7 @@ procedure infDoc(infDoc, rowCTe, qDoc)
          // :infNF, :infNFe e :infOutros são arrays de objtos com as classes TinfNFe, TinfNF e TinfOutros respectivamente
          if rowCte:getField('cte_tipo_doc_anexo') == '1'
             do while !qDoc:EOF()
-               :addInfNF({'mod' => qDoc:getField('modelo'),;
+               :addInfNF({'mod' => qDoc:zeroFill('modelo', 2),;
                           'serie' => qDoc:zeroFill('serie', 3),;
                           'nDoc' => qDoc:getField('nDoc'),;
                           'dEmi' => qDoc:getField('dEmi'),;
