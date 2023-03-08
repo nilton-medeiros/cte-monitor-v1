@@ -300,7 +300,8 @@ procedure submitCTe(rowCTe)
          sql:add("cte_doc_cfop AS nCFOP, ")
          sql:add("cte_doc_peso_total AS nPeso, ") // Continua com mais campos a baixo
          where:add("AND cte_doc_numero IS NOT NULL AND cte_doc_numero != '' ") // WHERE para cada caso
-         where:add("AND cte_doc_serie IS NOT NULL AND cte_doc_serie != '' ")
+         where:add("AND cte_doc_serie IS NOT NULL ")
+//       where:add("AND cte_doc_serie IS NOT NULL AND cte_doc_serie != '' ")                   // série = 0 é considerada '', acaba não entrando neste where
          exit
       case '2' // 2-NFe
          sql:add("cte_doc_chave_nfe AS chave, ") // Continua com mais campos a baixo
