@@ -164,7 +164,7 @@ function cte_createObject(rowCTe, qObs, qCc, qDoc)
    else
       // 2 - CT-e de Anulação
       // infCteAnu | Detalhamento do CT-e do tipo Anulação
-      cte:infCte:infCteAnu:submit := True
+      cte:infCte:infCteAnu:submit := False   // Na versão 4.00 do CT-e foi removido a tag "infCTeAnu"
       // infCTeAnu() * Módulo não implementado
    endif
 
