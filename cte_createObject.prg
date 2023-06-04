@@ -33,6 +33,7 @@
 
 #include <hmg.ch>
 
+#define ENCRYPTED true 
 // Atualizado: 2022-11-03 12:30
 /* Adicionado regra para o DIFAL, destinatário tem que ser o tomador */
 
@@ -380,7 +381,7 @@ procedure emit(emit, emitente)
       :enderEmit:UF:value := emitente:getField('UF')
       :fone:value := emitente:getField('fone')
       :fone:raw := onlyNumbers(:fone:value)
-      
+
       if DtoS(Date()) > "20220630"
          /* NT 2022.001v.1.00 - A partir de 01/07/22 nova tag obrigatória CRT - Código do Regime Tributário
             1 - Simples Nacional;
@@ -598,9 +599,9 @@ procedure imp(imp, rowCTe)
          (rowCTe:getField('des_icms') == '0') .and.; // e consumidor (destinatário) não contribuinte do ICMS
          (rowCTe:getField('cte_tomador') == '3') .and.; // Tomador tem que ser o DESTINATÁRIO
          ! :ICMSSN:submit  // O STF decidiu que essa cobrança do ICMS do Diferencial de Alíquota – DIFAL, para empresas Optantes pelo Simples é inconstitucional, pois seu recolhimento foi previsto pela Lei Complementar n° 123, de 14 de dezembro de 2006, e seu recolhimento é feito pela guia unificada do Simples Nacional – DAS
-         
-         /* A T E N Ç Ã O  :  ESTE IF SE ALTERADO, MUDAR TAMBÉM EM class_TCTe.prg liha 442*/ 
-         
+
+         /* A T E N Ç Ã O  :  ESTE IF SE ALTERADO, MUDAR TAMBÉM EM class_TCTe.prg liha 442*/
+
          saveLog("DIFAL CALCULADO")
          :ICMSUFFim := True
          // DIFAL - Diferença de Alíquota | FCP - Fundo de Combate a Pobreza | Arquivo SeFaz: CTe_Nota_Tecnica_2015_004.pdf (Pagina 4)
@@ -649,7 +650,7 @@ function calcDifal(uf_origem, uf_destino, valorPrestacao)
          if (q:getField('uf_origem') == uf_destino)
             pFim := Val(q:getField('uf_' + uf_destino))
          endif
-         
+
          // Verifica o segundo registro
          q:Skip()
 
@@ -669,10 +670,10 @@ function calcDifal(uf_origem, uf_destino, valorPrestacao)
          endif
          calcDifal['tem_difal'] := True
       else
-         saveLog({'Consulta SQL não retornou dois registros necessários: SQL: ' + s:value})
+         saveLog({'Consulta SQL não retornou dois registros necessários: SQL: ' + s:value}, ENCRYPTED)
       endif
    else
-      saveLog('Query não executada: ' + s:value)
+      saveLog('Query não executada: ' + s:value, ENCRYPTED)
    endif
 return calcDifal
 
@@ -721,7 +722,7 @@ procedure infDoc(infDoc, rowCTe, qDoc)
             enddo
          else
             if (qDoc:LastRec() == 0)
-               saveLog('ctes_documentos: tpDoc = 00 SQL retornou vazio! SQL: ' + qDoc:sql)
+               saveLog('ctes_documentos: tpDoc = 00 SQL retornou vazio! SQL: ' + qDoc:sql, ENCRYPTED)
             else
                do while !qDoc:EOF()
                   :addInfOutros({'tpDoc' => qDoc:zeroFill('tpDoc', 2),;
@@ -753,7 +754,7 @@ procedure docAnt(docAnt, rowCTe)
    s:add("WHERE cte_id = " + rowCte:getField('id') + " ")
    s:add("ORDER BY cte_eda_raz_social_nome")
    qEmi := TSQLQuery():new(s:value)
-   saveLog(s:value)
+   saveLog(s:value, ENCRYPTED)
 
    if qEmi:isExecuted()
       with object docAnt
@@ -779,7 +780,7 @@ procedure docAnt(docAnt, rowCTe)
             s:add("FROM ctes_doc_transp_ant ")
             s:add("WHERE cte_eda_id = " + qEmi:getField('cte_eda_id')+ " ")
             s:add("ORDER BY cte_dta_chave, cte_dta_serie, cte_dta_sub_serie, cte_dta_numero")
-            saveLog(s:value)
+            saveLog(s:value, ENCRYPTED)
 
             qTra := TSQLQuery():new(s:value)
             if qTra:isExecuted()
@@ -870,7 +871,7 @@ procedure aereo(aereo, rowCTe, qCc)
       q:Destroy()
       if qCc:isExecuted() .and. !qCc:EOF()
          :tarifa:CL:value := hb_uLeft(qCc:getField('CL'), 1)
-         :tarifa:cTar:value := rowCTe:getField('cTar') 
+         :tarifa:cTar:value := rowCTe:getField('cTar')
          :tarifa:vTar:value := qCc:getField('vTar')
       endif
    endwith

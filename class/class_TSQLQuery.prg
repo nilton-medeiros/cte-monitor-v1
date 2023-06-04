@@ -34,6 +34,7 @@
 #include <hmg.ch>
 #include "hbclass.ch"
 
+#define ENCRYPTED True
 
 CLASS TSQLQuery
 
@@ -192,9 +193,9 @@ method isExecuted(noWarning) CLASS TSQLQuery
 
 			if ::query:NetErr()
 				if 'Duplicate entry' $ ::query:Error()
-					saveLog('Erro de duplicidade ao ' + mode + ' ' + table + CRLF + string_mysql_to_hb(::sql))
+					saveLog('Erro de duplicidade ao ' + mode + ' ' + table + CRLF + string_mysql_to_hb(::sql), ENCRYPTED)
 				else
-					saveLog('Erro ao ' + mode + iif(Empty(table), ' ', ' na tabela de ' + table) + CRLF + ::query:Error() + CRLF + CRLF + string_mysql_to_hb(::query:cQuery))
+					saveLog('Erro ao ' + mode + iif(Empty(table), ' ', ' na tabela de ' + table) + CRLF + ::query:Error() + CRLF + CRLF + string_mysql_to_hb(::query:cQuery), ENCRYPTED)
 				endif
 				::query:Destroy()
 				msgNotify({'notifyTooltip' => "Erro de SQL" + CRLF + "Ver Log do sistema"})
@@ -206,11 +207,11 @@ method isExecuted(noWarning) CLASS TSQLQuery
 					// Query INSERT, UPDATE ou DELETE executada com sucesso!
 
 					if (mysql_affected_rows(::query:nSocket) == 0) .and. !noWarning
-							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Registros afetados: ' + hb_NToS(mysql_affected_rows(::query:nSocket)) + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery))
+							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Registros afetados: ' + hb_NToS(mysql_affected_rows(::query:nSocket)) + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery), ENCRYPTED)
 							msgNotify({'notifyTooltip' => "Não foi possível " + mode + " na tabela de " + table + CRLF + "Ver Log do sistema"})
 							::query:Destroy()
 					elseif (mysql_affected_rows(::query:nSocket) < 0)
-							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Erro de SQL - Registros afetados: ' + hb_NToS(mysql_affected_rows(::query:nSocket)) + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery))
+							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Erro de SQL - Registros afetados: ' + hb_NToS(mysql_affected_rows(::query:nSocket)) + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery), ENCRYPTED)
 							msgNotify({'notifyTooltip' => "Não foi possível " + mode + " na tabela de " + table + CRLF + "Ver Log do sistema"})
 							::query:Destroy()
 					else
@@ -228,7 +229,7 @@ method getField(params) CLASS TSQLQuery
 		default params := 1
 
 		if !ValType(::query) == "O"
-			saveLog(iif(::isExecuted(), 'Query/Tabela Executada','Query/Tabela está fechada!') + CRLF + 'SQL: ' + string_mysql_to_hb(::sql))
+			saveLog(iif(::isExecuted(), 'Query/Tabela Executada','Query/Tabela está fechada!') + CRLF + 'SQL: ' + string_mysql_to_hb(::sql), ENCRYPTED)
 			//msgDebugInfo({field_name_or_number, ::sql, ::query, number_as_string})
 			turnOFF()
 		endif

@@ -1,6 +1,8 @@
 #include <hmg.ch>
 #include <fileio.ch>
 
+#define ENCRYPTED true
+
 // Atualziação: 2022-05-30 as 20:30 - tag emp_simples_nacional AS CRT
 procedure loadCompanies()
 		local sql := TSQLString():new()
@@ -53,7 +55,7 @@ procedure loadCompanies()
 			e:Destroy()
 
 			if (:companiesStatus() == 0)
-				saveLog({"Sem empresas ativas cadastradas no TMS.CLOUD", hb_eol(), sql:value})
+				saveLog({"Sem empresas ativas cadastradas no TMS.CLOUD", hb_eol(), sql:value}, ENCRYPTED)
 				msgNotify({'notifyTooltip' => "Sem empresas cadastradas no TMS.CLOUD",;
 							  'showMsg' => {'message' => "Sem empresas cadastradas no TMS.CLOUD",;
 							  'title' => "TMS.CLOUD SEM EMPRESAS"}})
@@ -94,7 +96,7 @@ procedure loadAdminUsers()
 		u:Destroy()
 
 		if (:usersStatus() == 0)
-			saveLog({"Sem usuários ativos administradores cadastrados no TMS.CLOUD", hb_eol(), sql:value})
+			saveLog({"Sem usuários ativos administradores cadastrados no TMS.CLOUD", hb_eol(), sql:value}, ENCRYPTED)
 			msgNotify({'notifyTooltip' => "Sem administradores cadastrados no TMS.CLOUD",;
 						  'showMsg' => {'message' => "Sem usuários ativos e administradores cadastrados no TMS.CLOUD",;
 						  'title' => "TMS.CLOUD SEM USUÁRIOS"}})

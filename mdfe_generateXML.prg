@@ -32,7 +32,7 @@
 
 
 #include <hmg.ch>
-
+#define ENCRYPTED true
 
 procedure mdfe_generateXML(mdfe)
    local sefaz, p
@@ -129,7 +129,7 @@ procedure updateMDFeStatus(sefaz)
    s:add("cte_monitor_action = 'EXECUTED' " )
    s:add("WHERE id = " + sefaz:dfe_id)
    q := TSQLQuery():new(s:value)
-   saveLog('mdfe: SQL: ' + s:value)
+   saveLog('mdfe: SQL: ' + s:value, ENCRYPTED)
    if !q:isExecuted()
       q:Destroy()
       return

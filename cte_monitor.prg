@@ -32,7 +32,7 @@
 
 
 #include <hmg.ch>
-
+// #define ENCRYPTED true
 // Atualizado: 2022-05-29 15:00
 procedure monitorCTe()
       local sql := TSQLString():new()
@@ -321,8 +321,8 @@ procedure submitCTe(rowCTe)
    sql:add("FROM ctes_documentos ")
    sql:add(where:value)
    queryDoc := TSQLQuery():new(sql:value)
-   //saveLog({"SQL de cte_documentos:", hb_eol(), sql:value})
-   
+   //saveLog({"SQL de cte_documentos:", hb_eol(), sql:value}, ENCRYPTED)
+
    if !queryDoc:isExecuted()
       //MsgDebug(queryDoc)
       queryDoc:Destroy()

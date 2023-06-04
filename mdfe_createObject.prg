@@ -32,6 +32,7 @@
 
 
 #include <hmg.ch>
+#define ENCRYPTED true
 
 // Atualizado: 2022-05-29 15:00
 function mdfe_createObject(mdfe_record)
@@ -136,7 +137,7 @@ procedure ideMDFe(ide, record, emitente)
       :tpTransp:value := '' // 1 - ETC: Transporte Rodoviário de Cargas
       // :cDV: Gerado em generateKeyMDFe() ao validarMDFe()
       /* ATENÇÃO - MDFe - modal size é 1 e sempre é rodoviário '01' */
-      :modal:value := '1' // Right(emitente:getField('modal'), 1) 
+      :modal:value := '1' // Right(emitente:getField('modal'), 1)
       :procEmi:value := record:getField('procEmi')
       :verProc:value := record:getField('verProc')
       :UFIni:value := record:getField('UFIni')
@@ -213,7 +214,7 @@ procedure rodoMDFe(rodo, record, emitente)
             :valePed:submit := !(hmg_len(:valePed:disp:value) == 0)
          else
             :valePed:submit := False
-            saveLog('ctes_rod_vale_pedagio: Erro de SQL: ' + s:value)
+            saveLog('ctes_rod_vale_pedagio: Erro de SQL: ' + s:value, ENCRYPTED)
          endif
          q:Destroy()
          q := TSQLQuery():new('SELECT clie_id, clie_cnpj FROM clientes WHERE clie_id IN (' + record:getField('lista_tomadores') + ') ORDER BY clie_cnpj')
@@ -255,7 +256,7 @@ procedure rodoMDFe(rodo, record, emitente)
          q := TSQLQuery():new(s:value)
          if q:isExecuted()
             if (q:LastRec() == 0)
-               saveLog('veicTracao: SQL retornou vazio: ' + s:value)
+               saveLog('veicTracao: SQL retornou vazio: ' + s:value, ENCRYPTED)
                return
             else
                :cInt:value := q:getField('cInt')
@@ -281,7 +282,7 @@ procedure rodoMDFe(rodo, record, emitente)
                endif
             endif
          else
-            saveLog('Erro: SQL não executado: ' + s:value)
+            saveLog('Erro: SQL não executado: ' + s:value, ENCRYPTED)
          endif
          q:Destroy()
          // Informações do(s) Condutor(es) do veículo
@@ -304,7 +305,7 @@ procedure rodoMDFe(rodo, record, emitente)
                enddo
             endif
          else
-            saveLog('Erro: SQL não executado: ' + s:value)
+            saveLog('Erro: SQL não executado: ' + s:value, ENCRYPTED)
          endif
          q:Destroy()
       endwith
@@ -395,7 +396,7 @@ procedure infDocMDFe(infDoc, mdfe_id)
    if q:isExecuted()
       with object infDoc
          if (q:LastRec() == 0)
-            saveLog('view_ctes: Consulta SQL retornou vazia! SQL: ' + s:value)
+            saveLog('view_ctes: Consulta SQL retornou vazia! SQL: ' + s:value, ENCRYPTED)
          else
             do while !q:EOF()
                if :add_infMunDescarga({'cMunDescarga' => q:getField('cMunDescarga'), 'xMunDescarga' => q:getField('xMunDescarga')})
@@ -411,7 +412,7 @@ procedure infDocMDFe(infDoc, mdfe_id)
                         q2:Skip()
                      enddo
                   else
-                     saveLog('ctes: Erro ao executar SLQ: ' + s:value)
+                     saveLog('ctes: Erro ao executar SLQ: ' + s:value, ENCRYPTED)
                   endif
                   q2:Destroy()
                endif
@@ -444,7 +445,7 @@ procedure segMDFe(infMDFe, emitente, mdfe_id)
                enddo
             endif
          else
-            saveLog('ctes_seguro: Erro SQL: ' + s:value)
+            saveLog('ctes_seguro: Erro SQL: ' + s:value, ENCRYPTED)
          endif
          q:Destroy()
       endif

@@ -38,10 +38,10 @@
 
 REQUEST HB_CODEPAGE_UTF8
 
-// Atualizado: 2022-11-04 15:00
+// Atualizado: 2023-06-04 16:00
 
 procedure main
-      public appData := TAppData():new("1.2.92")
+      public appData := TAppData():new("1.2.93")
       if HMG SUPPORT UNICODE RUN
       hb_langSelect('PT')
       hb_cdpSelect('UTF8')
