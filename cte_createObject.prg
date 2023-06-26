@@ -267,7 +267,7 @@ procedure ideCTe(ide, rowCTe, emitente)
       * Data e hora da entrega em contingência
       * Módulo não implementado no TMS.CLOUD
       */
-      if (:tpEmis:value $ '7|8')
+      if (:tpEmis:value $ '5|7|8')
          :dhCont:value := Transform(DtoS(Date()), "@R 9999-99-99") + "T" + Time()
          :xJust:value := 'Manutencao agendada na Sefaz'
       endif
