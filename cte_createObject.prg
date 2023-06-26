@@ -33,7 +33,7 @@
 
 #include <hmg.ch>
 
-#define ENCRYPTED true 
+#define ENCRYPTED true
 // Atualizado: 2022-11-03 12:30
 /* Adicionado regra para o DIFAL, destinatário tem que ser o tomador */
 
@@ -266,12 +266,11 @@ procedure ideCTe(ide, rowCTe, emitente)
       /*
       * Data e hora da entrega em contingência
       * Módulo não implementado no TMS.CLOUD
-      *
-      if (:tpEmis:value == '5')
-         :dhCont:value := rowCTe:getField({'field_name_or_number' => "dhCont", 'date_as_string' => True})
-         :xJust:value := 'SEFAZ FORA DE SERVICO'
-      endif
       */
+      if (:tpEmis:value $ '7|8')
+         :dhCont:value := Transform(DtoS(Date()), "@R 9999-99-99") + "T" + Time()
+         :xJust:value := 'Manutencao agendada na Sefaz'
+      endif
    endwith
 return
 
