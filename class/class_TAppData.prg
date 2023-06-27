@@ -33,6 +33,7 @@
 
 #include <hmg.ch>
 #include "hbclass.ch"
+#include <fileio.ch>
 
 
 // Atualizado: 2022-05-30 10:30
