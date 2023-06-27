@@ -54,13 +54,15 @@ class TAppData
    data startTime readonly
    data endTime readonly
    data frequency readonly
-   data lastMessage init ''
+   data lastMessage
    data ACBr
    data ftp_url
    data ftp_server
    data ftp_id
    data ftp_password
    data dfePath
+   data tpAmb
+   data tpEmis
 
    method new(version) constructor
    method registerSystem()
@@ -96,9 +98,13 @@ method new(version) class TAppData
    ::ftp_server := ''
    ::ftp_id := ''
    ::ftp_password := ''
+   ::lastMessage := ''
+   ::tpAmb := '1'    // Produção
+   ::tpEmis := '1'   // Normal
 return self
 
 method registerSystem() class TAppData
+   local h
 
    if !hb_DirExists('tmp')
       hb_DirBuild( 'tmp' ) // Esta função, se precisar, cria pasta e subpastas em um comando só hb_DirBuild('dir1\dir2\dir3')
@@ -178,13 +184,32 @@ method registerSystem() class TAppData
    AEval(Directory('ftp-*.log'), {|aFile| iif(aFile[3] <= (Date()-30), hb_FileDelete(aFile[1]), NIL)})
 
    if hb_DirExists(::ACBr:returnPath)
-      AEval(Directory(::ACBr:returnPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-02), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
+      AEval(Directory(::ACBr:returnPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-05), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
    endif
    if hb_DirExists(::ACBr:outputPath)
-      AEval(Directory(::ACBr:outputPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-02), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
+      AEval(Directory(::ACBr:outputPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-05), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
    endif
    if hb_DirExists(::ACBr:xmlPath)
-      AEval(Directory(::ACBr:xmlPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-02), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
+      AEval(Directory(::ACBr:xmlPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-05), hb_FileDelete(::ACBr:returnPath + aFile[1]), NIL)})
+   endif
+   if hb_DirExists(::ACBr:outputPath)
+      AEval(Directory(::ACBr:xmlPath + '*.*'), {|aFile| iif(aFile[3] <= (Date()-365), hb_FileDelete(::ACBr:outputPath + aFile[1]), NIL)})
+   endif
+   if hb_FileExists('config.json')
+      h := jsonDecode(hb_MemoRead('config.json'))
+      if hb_HGetRef(h, 'tpAmb') .and. hb_HGetRef(h, 'tpEmis')
+         ::tpAmb := h['tpAmb']
+         ::tpEmis := h['tpEmis']
+      else
+         hb_FileDelete('config.json')
+         h := fCreate( "config.json", FC_NORMAL )
+         fWrite(h, hb_jsonEncode( {"tpAmb" => '1', "tpEmis" => '1'}, .T.))
+         fClose(h)
+      endif
+   else
+      h := fCreate( "config.json", FC_NORMAL )
+      fWrite(h, hb_jsonEncode( {"tpAmb" => '1', "tpEmis" => '1'}, .T.))
+      fClose(h)
    endif
 
    saveLog(hb_eol() + hb_eol() + ::displayName + ' - Sistema iniciado (monitorando...)' + hb_eol())

@@ -55,6 +55,19 @@ procedure cte_generateXML(cte, action)
 
       sefaz := TACBrMonitor():new(p)
 
+      with object appData
+         if !(:tpAmb == p['tpAmb']) .or. !(:tpEmis == cte:getField('tpEmis'))
+            :tpAmb := p['tpAmb']
+            :tpEmis := cte:getField('tpEmis')
+            hb_FileDelete('config.json')
+            h := fCreate( "config.json", FC_NORMAL )
+            fWrite(h, hb_jsonEncode({"tpAmb" => :tpAmb, "tpEmis" => :tpEmis}, .T.))
+            fClose(h)
+            sefaz:SetAmbiente()
+            sefaz:SetFormaEmissao(:tpEmis)
+         endif
+      endwith
+
       if sefaz:ObterCertificado()
          if sefaz:Assinar() .and. sefaz:Validar()
             if action == 'GETFILES'
@@ -85,7 +98,7 @@ procedure updateCTeStatus(sefaz, up_cte)
    if (sefaz:situacao == 'TRANSMITIDO')
       sefaz:situacao := 'VALIDADO'
    endif
-   
+
    s:add("cte_situacao = '" + sefaz:situacao + "', ")
    s:add("cte_chave = '" + sefaz:chDFe + "', ")
 
@@ -162,7 +175,7 @@ procedure updateCTeStatus(sefaz, up_cte)
    s:add("WHERE cte_id = " + sefaz:dfe_id)
 
    q := TSQLQuery():new(s:value)
-   
+
    if !q:isExecuted()
       q:Destroy()
       RegistryWrite(::registryPath + "Monitoring\DontRun", 1)
@@ -259,7 +272,7 @@ procedure updateCTeErrors(cte_sefaz, eventStatus)
 
    // eventStatus = true quando cancelCTe() e inutilizeCTe()
    if eventStatus .and. !Empty(cte_sefaz:events)
-      
+
       s:setValue("INSERT INTO ctes_eventos (cte_id, cte_ev_protocolo, cte_ev_data_hora, cte_ev_evento, cte_ev_detalhe) VALUES ")
 
       for each e in cte_sefaz:events
@@ -279,7 +292,7 @@ procedure updateCTeErrors(cte_sefaz, eventStatus)
          turnOFF()
       endif
       q:Destroy()
-   
+
    endif
    saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k+i), ' Evento(s) com sucesso'})
 

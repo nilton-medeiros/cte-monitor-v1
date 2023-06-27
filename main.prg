@@ -32,6 +32,7 @@
 
 
 #include <hmg.ch>
+#include <fileio.ch>
 
 //#define UM_SEGUNDO 1000
 //#define UM_MINUTO 60000
@@ -41,7 +42,7 @@ REQUEST HB_CODEPAGE_UTF8
 // Atualizado: 2023-06-04 16:00
 
 procedure main
-      public appData := TAppData():new("1.2.95")
+      public appData := TAppData():new("1.2.97")
       if HMG SUPPORT UNICODE RUN
       hb_langSelect('PT')
       hb_cdpSelect('UTF8')
@@ -80,6 +81,8 @@ procedure turnOFF(isUser)
 return
 
 procedure mainForm_onInit()
+      local cJson, handle
+
       SetProperty("Main", "TimerCTe", "Enabled", False)
       if (RegistryRead(appData:registryPath + "Monitoring\DontRun") == 1)
          saveLog('Parada forçada: O parâmetro DontRun está ativo')
@@ -104,7 +107,9 @@ procedure mainForm_onInit()
          endif
          SetProperty('Main', 'notifyIcon', 'ntfyICON')
       endwith
+
       SetProperty('Main', 'TimerCTe', 'Enabled', True)
+
 return
 
 procedure main_timerCTe_action()
