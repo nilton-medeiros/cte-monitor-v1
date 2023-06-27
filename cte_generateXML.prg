@@ -293,7 +293,7 @@ procedure updateSefazErrors(sefaz)
       s:add("'EVENTO REJEITADO - VERIFICAR COM O SUPORTE')") // cte_ev_detalhe e fechamento dos VALUES
       k := 1
    else
-      for each e in cte_sefaz:events
+      for each e in sefaz:events
          // e = {'dhRecbto' => ::dhRecbto, 'nProt' => ::nRec, 'cStat' => ::cStat, 'xMotivo' => ::xMotivo + ' | Ambiente de ' + ::tpAmb}
          k++
          s:add(iif((k==1), [(], [, (])) // Inicio dos VALUES
