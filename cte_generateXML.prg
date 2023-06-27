@@ -56,9 +56,9 @@ procedure cte_generateXML(cte, action)
       sefaz := TACBrMonitor():new(p)
 
       with object appData
-         if !(:tpAmb == p['tpAmb']) .or. !(:tpEmis == cte:getField('tpEmis'))
+         if !(:tpAmb == p['tpAmb']) .or. !(:tpEmis == cte:InfCte:ide:tpEmis:value)
             :tpAmb := p['tpAmb']
-            :tpEmis := cte:getField('tpEmis')
+            :tpEmis := cte:InfCte:ide:tpEmis:value
             hb_FileDelete('config.json')
             h := fCreate( "config.json", FC_NORMAL )
             fWrite(h, hb_jsonEncode({"tpAmb" => :tpAmb, "tpEmis" => :tpEmis}, .T.))
