@@ -216,7 +216,7 @@ procedure updateCTeStatus(sefaz, up_cte)
 return
 
 procedure updateCTeErrors(cte_obj)
-   local k := i := 0, cId, e
+   local i := 0, cId, e
    local msg, q
    local s := TSQLString():new("UPDATE ctes SET ")
 
@@ -262,12 +262,12 @@ procedure updateCTeErrors(cte_obj)
    endif
    q:Destroy()
 
-   saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k+i), ' Evento(s) com sucesso'})
+   saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(i), ' Evento(s) com sucesso'})
 
 return
 
 procedure updateSefazErrors(sefaz)
-   local k := i := 0, cId, e
+   local k := 0, cId, e
    local msg, q
    local s := TSQLString():new("UPDATE ctes SET ")
 
@@ -291,7 +291,7 @@ procedure updateSefazErrors(sefaz)
       s:add(dateTime_hb_to_mysql(Date(), Time()) + ", ") // cte_ev_data_hora
       s:add("'N/A', ") // cte_ev_evento
       s:add("'EVENTO REJEITADO - VERIFICAR COM O SUPORTE')") // cte_ev_detalhe e fechamento dos VALUES
-      i := 1
+      k := 1
    else
       for each e in cte_sefaz:events
          // e = {'dhRecbto' => ::dhRecbto, 'nProt' => ::nRec, 'cStat' => ::cStat, 'xMotivo' => ::xMotivo + ' | Ambiente de ' + ::tpAmb}
@@ -304,14 +304,15 @@ procedure updateSefazErrors(sefaz)
          e['xMotivo'] := StrTran(e['xMotivo'], '; ;', ';')
          s:add("'" + string_hb_to_MySQL(e['xMotivo']) + "')") // fechamento dos VALUES
       next
-      q := TSQLQuery():new(s:value)
-      if !q:isExecuted()
-         q:Destroy()
-         turnOFF()
-      endif
-      q:Destroy()
    endif
 
-   saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k+i), ' Evento(s) com sucesso'})
+   q := TSQLQuery():new(s:value)
+   if !q:isExecuted()
+      q:Destroy()
+      turnOFF()
+   endif
+   q:Destroy()
+
+   saveLog({'Atualizado TMS.CLOUD |CTe Id: ', cId, ' |Atualizado ', hb_ntos(k), ' Evento(s) com sucesso'})
 
 return
