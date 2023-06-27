@@ -359,7 +359,7 @@ procedure cancelCTe(cte)
    if sefaz:Cancelar()
       updateCTeStatus(sefaz)
    else
-      updateCTeErrors(sefaz, True)
+      updateSefazErrors(sefaz)
    endif
    msgNotify()
 return
@@ -420,7 +420,7 @@ procedure inutilizeCTe(faixa)
       if sefaz:Inutilizar(p2)
          updateCTeStatus(sefaz)
       else
-         updateCTeErrors(sefaz, True)
+         updateSefazErrors(sefaz)
       endif
    next
    msgNotify()
