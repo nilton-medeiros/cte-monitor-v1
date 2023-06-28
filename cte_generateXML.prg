@@ -32,6 +32,7 @@
 
 
 #include <hmg.ch>
+#include <fileio.ch>
 
 // Atualziado: 2022-06-07 15:30 | Troca da propriedade tpAmb para xTpAmb class TACBrMonitor
 
