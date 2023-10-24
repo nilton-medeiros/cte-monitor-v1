@@ -207,7 +207,7 @@ method isExecuted(noWarning) CLASS TSQLQuery
 					// Query INSERT, UPDATE ou DELETE executada com sucesso!
 
 					if (mysql_affected_rows(::query:nSocket) == 0) .and. !noWarning
-							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Registros afetados: ' + hb_NToS(mysql_affected_rows(::query:nSocket)) + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery), ENCRYPTED)
+							saveLog('Não foi possível ' + mode + ' na tabela de ' + table + CRLF + 'Registros afetados: 0' + CRLF + CRLF + mysql_error(::query:nSocket) + CRLF + CRLF + string_mysql_to_hb(::query:cQuery))
 							msgNotify({'notifyTooltip' => "Não foi possível " + mode + " na tabela de " + table + CRLF + "Ver Log do sistema"})
 							::query:Destroy()
 					elseif (mysql_affected_rows(::query:nSocket) < 0)

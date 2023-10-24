@@ -219,6 +219,7 @@ procedure ideCTe(ide, rowCTe, emitente)
    with object ide
       :CFOP:value := rowCTe:getField('CFOP')
       :natOp:value := rowCTe:getField('natOp')
+      :tpImp:value := emitente:getField('tpImp')
       :tpAmb:value := emitente:getField('tpAmb')
       :tpCTe:value := rowCTe:getField('tpCTe')
       :procEmi:value := "0"  // 0 - emissão de CT-e com aplicativo do contribuinte

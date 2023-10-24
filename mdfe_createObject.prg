@@ -300,7 +300,7 @@ procedure rodoMDFe(rodo, record, emitente)
          if q:isExecuted()
             if !(q:LastRec() == 0)
                do while !q:EOF()
-                  :add_condutor({'xNome' => q:getField('xNome'), 'CPF' => q:getField('CPF')})
+                  :add_condutor({'xNome' => q:getField('xNome'), 'CPF' => q:zeroFill('CPF', 11)})
                   q:Skip()
                enddo
             endif

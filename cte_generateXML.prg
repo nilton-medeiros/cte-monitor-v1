@@ -60,7 +60,8 @@ procedure cte_generateXML(cte, action)
             :tpEmis := cte:InfCte:ide:tpEmis:value
             hb_FileDelete('config.json')
             h := fCreate( "config.json", FC_NORMAL )
-            fWrite(h, hb_jsonEncode({"tpAmb" => :tpAmb, "tpEmis" => :tpEmis}, .T.))
+            # define LHUMAN .t.
+            fWrite(h, hb_jsonEncode({"tpAmb" => :tpAmb, "tpEmis" => :tpEmis}, LHUMAN))
             fClose(h)
             sefaz:SetAmbiente()
             sefaz:SetFormaEmissao(:tpEmis)
