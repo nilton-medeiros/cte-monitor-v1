@@ -177,7 +177,6 @@ procedure updateCTeStatus(sefaz, up_cte)
    q := TSQLQuery():new(s:value)
 
    if !q:isExecuted()
-      q:Destroy()
       RegistryWrite(::registryPath + "Monitoring\DontRun", 1)
       turnOFF()
    endif
