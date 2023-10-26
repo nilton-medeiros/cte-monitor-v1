@@ -364,10 +364,10 @@ procedure rodoMDFe(rodo, record, emitente)
 
       // lacRodo | Lacres
       s:setValue("SELECT t1.lac_numero AS nLacre FROM ctes_rod_lacres AS t1 ")
-      s:add("WHERE t1.cte_id IN (SELECT cte_id FROM mdfes_ctes WHERE mdfe_id = ' + record:getField('id') + ') ")
+      s:add("WHERE t1.cte_id IN (SELECT cte_id FROM mdfes_ctes WHERE mdfe_id = " + record:getField('id') + ") ")
       s:add("UNION ")
       s:add("SELECT t2.nLacre FROM mdfes_lacres AS t2 ")
-      s:add("WHERE t2.mdfe_id = ' + record:getField('id') + ' ")
+      s:add("WHERE t2.mdfe_id = " + record:getField('id') + " ")
       s:add("ORDER BY nLacre")
       q := TSQLQuery():new(s:value)
 
